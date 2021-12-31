@@ -4,12 +4,28 @@
     {
       "src": "src/index.ts",
       "use": "@vercel/node"
+    },
+    {
+      "src": "/public/**",
+      "use": "@vercel/static"
     }
   ],
   "rewrites": [
     {
-      "source": "/:path*",
+      "source": "/curse/maven/(.+)",
       "destination": "/src/index.ts"
+    },
+    {
+      "source": "/download-binary/(.+)",
+      "destination": "/src/index.ts"
+    },
+    {
+      "source": "/test/(.+)",
+      "destination": "/src/index.ts"
+    },
+    {
+      "source": "(.+)",
+      "destination": "/public$1"
     }
   ]
 }

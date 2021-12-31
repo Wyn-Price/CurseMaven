@@ -29,7 +29,4 @@ app.get("/download-binary/*", async (req: Request<{ "0": string }>, res) => {
   fetch(`https://media.forgecdn.net/files/${req.params[0]}`).then(r => r.body.pipe(res))
 })
 
-//Serve the static files
-app.use(express.static('public', { extensions: ['html'] }))
-
 export default app
