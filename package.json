@@ -1,7 +1,7 @@
 {
   "name": "cursemaven",
   "version": "5.0.0",
-  "description": "A more robust alternative to the curseforge maven/",
+  "description": "A more robust alternative to the curseforge maven",
   "main": "src/index.ts",
   "scripts": {
     "start": "npx tsc -w",
