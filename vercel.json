@@ -10,6 +10,12 @@
       "use": "@vercel/static"
     }
   ],
+  "redirects": [
+    {
+      "source": "/source",
+      "destination": "https://github.com/Wyn-Price/CurseMaven/"
+    }
+  ],
   "rewrites": [
     {
       "source": "/curse/maven/(.+)",
