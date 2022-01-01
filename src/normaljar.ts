@@ -1,8 +1,12 @@
 import { RequestHandler } from "express";
 import { fetchDownloadUrl, getRedirectUrl } from "./util";
 
-const normaljar: RequestHandler = async (req, res) => {
-  const { id, file } = req.params
+const normaljar: RequestHandler = async (req, res, classifierjar) => {
+  const { id, file, classifier } = req.params
+
+  if (classifier !== "") {
+    return classifierjar()
+  }
 
   const response = await fetchDownloadUrl(id, file)
   if (response.ok) {
