@@ -27,5 +27,8 @@
       "source": "(.+)",
       "destination": "/public$1"
     }
-  ]
+  ],
+  "github": {
+    "silent": true
+  }
 }
