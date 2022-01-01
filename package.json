@@ -4,8 +4,7 @@
   "description": "A more robust alternative to the curseforge maven",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npx tsc -w",
-    "dev": "npx nodemon",
+    "dev": "start http://localhost:3000 && vercel dev",
     "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
     "vercel-build": "yarn test"
   },
@@ -32,7 +31,6 @@
     "@types/supertest": "^2.0.11",
     "cross-env": "^7.0.3",
     "jest": "^27.4.5",
-    "nodemon": "^2.0.7",
     "supertest": "^6.1.6",
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
