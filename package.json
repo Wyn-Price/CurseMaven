@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npx tsc -w",
     "dev": "npx nodemon",
-    "test": "cross-env NODE_ENV=test jest --testTimeout=10000"
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
+    "vercel-build": "yarn test"
   },
   "repository": {
     "type": "git",
