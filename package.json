@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "start http://localhost:3000 && vercel dev",
-    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=30000",
     "vercel-build": "yarn test"
   },
   "repository": {
