@@ -12,18 +12,29 @@ export const fetchDownloadUrl = (id: any, file: any) => fetch(getDownloadUrl(id,
 //The `/download-binary/` is just a reverse proxy to the forge media server, however I'm not too sure that it doesn't use up bandwidth when downloading the jar, so I only use this when I need to.
 //
 //If the file name (jei_1.12.2-4.15.0.281.jar) contains any problematic characters then return a redirect to `/download-binary/`, otherwise it redirects to curseforge's media server.
+//
+//
+//2022-01-02T06:14:58.021+0000 [DEBUG] [org.gradle.internal.resource.transport.http.HttpClientConfigurer$DowngradeProtectingRedirectStrategy] Redirect requested to location 'https://media.forgecdn.net/files/3335/93/BetterFoliage-2.6.5%2B368b50a-Fabric-1.16.5.jar'
+//2022-01-02T06:14:58.022+0000 [DEBUG] [org.apache.http.impl.execchain.RedirectExec] Resetting target auth state
+//2022-01-02T06:14:58.022+0000 [DEBUG] [org.apache.http.impl.execchain.RedirectExec] Redirecting to 'https://media.forgecdn.net/files/3335/93/BetterFoliage-2.6.5+368b50a-Fabric-1.16.5.jar' via {s}->https://media.forgecdn.net:443
+//
+//Decoding is done at URLEncodedUtils#urlDecode
+//Call stack is below (line numbers are the line of the next call):
+//DefaultRedirectStrategy#getLocationURI L 97
+//URIUtils#normalizeSyntax L 196
+//new URIBuilder --> URIBuilder#digestURI --> URIBuilder#parsePath L 157
+//URLEncodedUtils#parsePathSegments L 236
+//URLEncodedUtils#urlDecode
 export const getRedirectUrl = (url: string) => {
-  var problematicChars = "! $ & ' ( ) + , ; = @".split(" ")
 
   //The file name will be the last one. The reason I pop to get the raw file name instead of just doing `split[6]`, is as `split` is joined back if there are no problematic chars.
   var split = url.split('\/')
   var rawFileName = split.pop()
   var fileName = encodeURIComponent(rawFileName)
 
-  //If there are problematic chars then redirect internally.
-  if (problematicChars.some(char => rawFileName.includes(char))) {
-    const a = `/download-binary/${split[4]}/${split[5]}/${encodeURIComponent(fileName)}` //We have to encode it twice for this to work with gradle
-    return a
+  // If there are problematic chars then redirect internally.
+  if (rawFileName.includes("+")) {
+    return `/download-binary/${split[4]}/${split[5]}/${encodeURIComponent(fileName)}` //We have to encode it twice for this to work with gradle
   } else {
     return split.join('/') + '/' + fileName
   }
