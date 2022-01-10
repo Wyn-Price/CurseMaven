@@ -65,7 +65,21 @@ app.get("/test/:id/:file/:classifier?", testing)
 
 //Ideally this would be a rewrite (proxy pass), however thanks to gradle, we need to do it manually
 app.get("/download-binary/*", async (req: Request<{ "0": string }>, res) => {
-  fetch(`https://media.forgecdn.net/files/${req.params[0]}`).then(r => r.body.pipe(res))
+  fetch(`https://media.forgecdn.net/files/${req.params[0]}`).then(r => {
+    //Copy over some of the headers 
+    for (let header of ["content-type", "content-length", "accept-ranges"]) {
+      const value = r.headers.get(header)
+      if (value !== null) {
+        res.header(header, value)
+      }
+    }
+
+    res.status(r.status)
+
+    //Pipe the body
+    r.body.pipe(res)
+
+  })
 })
 
 export default app
