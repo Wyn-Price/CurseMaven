@@ -7,7 +7,7 @@ import { getDownloadUrl, getRedirectUrl } from './util';
 const testing: RequestHandler = async (req, res) => {
   const { id, file, classifier } = req.params
   const output = [
-    `Raw URL: ${req.url.substring(0, req.url.indexOf("?"))}`,
+    `Raw URL: ${req.url}`,
     ``,
     `ProjectId: ${id}`,
     `FileId: ${file}`,
@@ -37,6 +37,11 @@ const runTests = async (id: string, file: string, classifier: string, output: st
   const mainResponse = await fetchUrlTest(getDownloadUrl(id, file), output, flush)
   const mainResponseBody = await mainResponse.text()
   output.push(`Resolved ${mainResponse.status} ${mainResponseBody}`)
+
+  if (!mainResponse.ok) {
+    output.push("\n\nJAR WAS NOT FOUND")
+    return flush()
+  }
 
   if (classifier === undefined || classifier === '') {
     output.push(`\nResult: ${getRedirectUrl(mainResponseBody)}`)
