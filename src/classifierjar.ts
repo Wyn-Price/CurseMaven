@@ -1,4 +1,6 @@
+import AggregateError from "es-aggregate-error";
 import { RequestHandler } from 'express';
+import PromiseAny from "promise.any";
 import { fetchDownloadUrl, getRedirectUrl } from './util';
 
 export const classifierTries = 10
@@ -17,13 +19,24 @@ const classifierjar: RequestHandler = async (req, res) => {
 
   const numFileId = parseInt(file)
 
-  for (let i = 0; i < classifierTries; i++) {
+  //Run all requests async, and get the first one (if any) to resolve.
+  const fetchPromises = Array.from({ length: classifierTries }, async (_, i) => {
     const response = await fetchDownloadUrl(id, numFileId + i + 1)
     if (response.ok) {
       const fileUrl = await response.text()
       if (fileUrl.endsWith(endOfUrlToLookFor)) {
-        return res.redirect(getRedirectUrl(fileUrl))
+        return fileUrl
       }
+    }
+    return Promise.reject()
+  })
+
+
+  try {
+    return res.redirect(getRedirectUrl(await PromiseAny(fetchPromises)))
+  } catch (e) {
+    if (!(e instanceof AggregateError)) {
+      throw e
     }
   }
 
