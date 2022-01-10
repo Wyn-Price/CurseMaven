@@ -205,7 +205,7 @@ CLASSIFIER WAS NOT FOUND`.substring(1)
     )
   })
 
-  test("When ID is correct the file doesn't exist ", async () => {
+  test("When file ID doesn't exist ", async () => {
     //curse.maven:invalid-12345:12345
     const res = await requestWithSupertest.get("/test/12345/12345")
     expect(res.status).toStrictEqual(200)
