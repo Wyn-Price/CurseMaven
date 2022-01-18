@@ -95,9 +95,10 @@ ProjectId: 238222
 FileId: 2724420
 Classifier: undefined
 
-Download URL: https://addons-ecs.forgesvc.net/api/v2/addon/238222/file/2724420/download-url
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/238222/file/2724420/download-url
-Resolved 200 https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar
+Download URL: https://api.curseforge.com/v1/mods/238222/files/2724420/download-url
+GET: https://api.curseforge.com/v1/mods/238222/files/2724420/download-url
+Resolved 200
+    https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar
 
 Result: https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar`.substring(1)
     )
@@ -114,16 +115,17 @@ ProjectId: 267602
 FileId: 2809915
 Classifier: api
 
-Download URL: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809915/download-url
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809915/download-url
-Resolved 200 https://edge.forgecdn.net/files/2809/915/CTM-MC1.12.2-1.0.0.29.jar
+Download URL: https://api.curseforge.com/v1/mods/267602/files/2809915/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809915/download-url
+Resolved 200
+    https://edge.forgecdn.net/files/2809/915/CTM-MC1.12.2-1.0.0.29.jar
 ParsedID: 2809915
 Searching for classifier: 'api'
 Jarname: '/CTM-MC1.12.2-1.0.0.29-api.jar'
 Tries: 10
 
 Iteration: 0
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809916/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809916/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/916/CTM-MC1.12.2-1.0.0.29-api.jar' -> true
 
@@ -142,61 +144,62 @@ ProjectId: 267602
 FileId: 2809915
 Classifier: source
 
-Download URL: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809915/download-url
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809915/download-url
-Resolved 200 https://edge.forgecdn.net/files/2809/915/CTM-MC1.12.2-1.0.0.29.jar
+Download URL: https://api.curseforge.com/v1/mods/267602/files/2809915/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809915/download-url
+Resolved 200
+    https://edge.forgecdn.net/files/2809/915/CTM-MC1.12.2-1.0.0.29.jar
 ParsedID: 2809915
 Searching for classifier: 'source'
 Jarname: '/CTM-MC1.12.2-1.0.0.29-source.jar'
 Tries: 10
 
 Iteration: 0
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809916/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809916/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/916/CTM-MC1.12.2-1.0.0.29-api.jar' -> false
 
 Iteration: 1
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809917/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809917/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/917/CharacterStatsClassic_2.3.zip' -> false
 
 Iteration: 2
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809918/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809918/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/918/Worthless 8.2.5 build 1.zip' -> false
 
 Iteration: 3
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809919/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809919/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/919/Minecolonies Getting Started-2.22.23.zip' -> false
 
 Iteration: 4
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809920/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809920/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/920/mcgs-1.14.4-2.22.23-Server.zip' -> false
 
 Iteration: 5
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809921/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809921/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/921/HMM1.6.0.jar' -> false
 
 Iteration: 6
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809922/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809922/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/922/DrinkIt-1.05-retail.zip' -> false
 
 Iteration: 7
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809923/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809923/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/923/karadeniz mod beta2.jar' -> false
 
 Iteration: 8
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809924/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809924/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/924/peeandballsgaming.zip' -> false
 
 Iteration: 9
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/267602/file/2809925/download-url
+GET: https://api.curseforge.com/v1/mods/267602/files/2809925/download-url
     Response: 200
     'https://edge.forgecdn.net/files/2809/925/[1.6.1.1]_Heliomalt_XVM_v.1.17.3.exe' -> false
 
@@ -216,9 +219,9 @@ ProjectId: 12345
 FileId: 12345
 Classifier: undefined
 
-Download URL: https://addons-ecs.forgesvc.net/api/v2/addon/12345/file/12345/download-url
-GET: https://addons-ecs.forgesvc.net/api/v2/addon/12345/file/12345/download-url
-Resolved 404 
+Download URL: https://api.curseforge.com/v1/mods/12345/files/12345/download-url
+GET: https://api.curseforge.com/v1/mods/12345/files/12345/download-url
+Resolved 404
 
 
 JAR WAS NOT FOUND`.substring(1)

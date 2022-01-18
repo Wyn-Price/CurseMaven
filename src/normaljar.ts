@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { fetchDownloadUrl, getRedirectUrl } from "./util";
+import { fetchDownloadUrl, getFetchedData, getRedirectUrl } from "./util";
 
 const normaljar: RequestHandler = async (req, res, classifierjar) => {
   const { id, file, classifier } = req.params
@@ -10,7 +10,7 @@ const normaljar: RequestHandler = async (req, res, classifierjar) => {
 
   const response = await fetchDownloadUrl(id, file)
   if (response.ok) {
-    return res.redirect(getRedirectUrl(await response.text()))
+    return res.redirect(getRedirectUrl(await getFetchedData(response)))
   } else {
     return res.status(response.status).send(response.statusText)
   }

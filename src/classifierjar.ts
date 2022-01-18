@@ -1,7 +1,7 @@
 import AggregateError from "es-aggregate-error";
 import { RequestHandler } from 'express';
 import PromiseAny from "promise.any";
-import { fetchDownloadUrl, getRedirectUrl } from './util';
+import { fetchDownloadUrl, getFetchedData, getRedirectUrl } from './util';
 
 export const classifierTries = 10
 
@@ -12,7 +12,7 @@ const classifierjar: RequestHandler = async (req, res) => {
   if (!mainResponse.ok) {
     return res.sendStatus(mainResponse.status)
   }
-  const mainUrl = await mainResponse.text()
+  const mainUrl = await getFetchedData(mainResponse)
 
   const jarName = mainUrl.substring(mainUrl.lastIndexOf('/'), mainUrl.length - 4)
   const endOfUrlToLookFor = `${jarName}-${classifier}.jar`
@@ -23,7 +23,7 @@ const classifierjar: RequestHandler = async (req, res) => {
   const fetchPromises = Array.from({ length: classifierTries }, async (_, i) => {
     const response = await fetchDownloadUrl(id, numFileId + i + 1)
     if (response.ok) {
-      const fileUrl = await response.text()
+      const fileUrl = await getFetchedData(response)
       if (fileUrl.endsWith(endOfUrlToLookFor)) {
         return fileUrl
       }

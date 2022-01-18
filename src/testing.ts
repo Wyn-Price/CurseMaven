@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express';
-import fetch from 'node-fetch';
 import { classifierTries } from './classifierjar';
-import { getDownloadUrl, getRedirectUrl } from './util';
+import { authFetch, getDownloadUrl, getFetchedData, getRedirectUrl } from './util';
 
 
 const testing: RequestHandler = async (req, res) => {
@@ -35,13 +34,16 @@ const testing: RequestHandler = async (req, res) => {
 
 const runTests = async (id: string, file: string, classifier: string, output: string[], flush: () => void) => {
   const mainResponse = await fetchUrlTest(getDownloadUrl(id, file), output, flush)
-  const mainResponseBody = await mainResponse.text()
-  output.push(`Resolved ${mainResponse.status} ${mainResponseBody}`)
+  output.push(`Resolved ${mainResponse.status}`)
 
   if (!mainResponse.ok) {
     output.push("\n\nJAR WAS NOT FOUND")
     return flush()
   }
+
+  const mainResponseBody = await getFetchedData(mainResponse)
+  output.push(`    ${mainResponseBody}`)
+
 
   if (classifier === undefined || classifier === '') {
     output.push(`\nResult: ${getRedirectUrl(mainResponseBody)}`)
@@ -63,7 +65,7 @@ const runTests = async (id: string, file: string, classifier: string, output: st
     const response = await fetchUrlTest(getDownloadUrl(id, numId + i + 1), output, flush)
     output.push(`    Response: ${response.status}`)
     if (response.ok) {
-      const fileUrl = await response.text()
+      const fileUrl = await getFetchedData(response)
 
       const found = fileUrl.endsWith(endOfUrlToLookFor)
       output.push(`    '${fileUrl}' -> ${found}`)
@@ -80,7 +82,7 @@ const runTests = async (id: string, file: string, classifier: string, output: st
 
 const fetchUrlTest = async (url: string, output: string[], flush: () => void) => {
   try {
-    const fetched = await fetch(url)
+    const fetched = await authFetch(url)
     output.push("GET: " + url)
     return fetched
   } catch (e) {
