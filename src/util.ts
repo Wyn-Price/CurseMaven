@@ -8,6 +8,14 @@ export const getFetchedData = async (response: Response) => {
   const json = await response.json()
   return json.data
 }
+
+const doLogs = process.env.NODE_ENV !== "test"
+export const log = (data: string) => {
+  if (doLogs) {
+    console.log(data)
+  }
+}
+
 //Gets the redirect url for the given url. An example of this download url would be: https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar
 //
 //Due to an issue with apache's http client which gradle uses, some characters will be decoded, but not encoded. 

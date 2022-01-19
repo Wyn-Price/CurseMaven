@@ -4,6 +4,7 @@ import classifierjar from "./classifierjar";
 import normaljar from "./normaljar";
 import pom from "./pom";
 import testing from "./testing";
+import { log } from "./util";
 
 const app = express();
 
@@ -55,7 +56,7 @@ const verifyParams: RequestHandler = (req, res, next) => {
   req.params.name = name
   req.params.classifier = classifier
 
-  console.log(`project_id=${id},project_named=${name},file_id=${file},classifier=${classifier ?? 'n/a'}`)
+  log(`project_id=${id},project_named=${name},file_id=${file},classifier=${classifier ?? 'n/a'}`)
 
   next()
 }
