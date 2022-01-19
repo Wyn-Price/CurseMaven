@@ -55,6 +55,8 @@ const verifyParams: RequestHandler = (req, res, next) => {
   req.params.name = name
   req.params.classifier = classifier
 
+  console.log(`project_id=${id},project_named=${name},file_id=${file},classifier=${classifier ?? 'n/a'}`)
+
   next()
 }
 
