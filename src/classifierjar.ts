@@ -8,12 +8,12 @@ export const classifierTries = 10
 const classifierjar: RequestHandler = async (req, res) => {
   const { id, file, classifier } = req.params
 
+  const startTime = Date.now()
+
   const mainResponse = await fetchDownloadUrl(id, file)
   if (!mainResponse.ok) {
     return res.sendStatus(mainResponse.status)
   }
-
-  const startTime = Date.now()
 
   const mainUrl = await getFetchedData(mainResponse)
 
