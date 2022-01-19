@@ -3,6 +3,13 @@ import fetch from "node-fetch"
 export const getDownloadUrl = (id: any, file: any) => `https://addons-ecs.forgesvc.net/api/v2/addon/${id}/file/${file}/download-url`
 export const fetchDownloadUrl = (id: any, file: any) => fetch(getDownloadUrl(id, file))
 
+const doLogs = process.env.NODE_ENV !== "test"
+export const log = (data: string) => {
+  if (doLogs) {
+    console.log(data)
+  }
+}
+
 //Gets the redirect url for the given url. An example of this download url would be: https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar
 //
 //Due to an issue with apache's http client which gradle uses, some characters will be decoded, but not encoded. 
