@@ -17,6 +17,7 @@ const classifierjar: RequestHandler = async (req, res) => {
   const mainUrl = await mainResponse.text()
 
   const fetchedTime = Date.now()
+  console.log(`classifier_main_request=${fetchedTime - startTime}`)
 
   const jarName = mainUrl.substring(mainUrl.lastIndexOf('/'), mainUrl.length - 4)
   const endOfUrlToLookFor = `${jarName}-${classifier}.jar`
@@ -44,7 +45,7 @@ const classifierjar: RequestHandler = async (req, res) => {
     }
   } finally {
     const finishedTime = Date.now()
-    console.log(`classifier_main_request=${fetchedTime - startTime},classifier_sub_requests=${finishedTime - fetchedTime}`)
+    console.log(`classifier_sub_requests=${finishedTime - fetchedTime}`)
   }
 
   return res.sendStatus(404)
