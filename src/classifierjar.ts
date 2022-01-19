@@ -12,7 +12,12 @@ const classifierjar: RequestHandler = async (req, res) => {
   if (!mainResponse.ok) {
     return res.sendStatus(mainResponse.status)
   }
+
+  const startTime = Date.now()
+
   const mainUrl = await getFetchedData(mainResponse)
+
+  const fetchedTime = Date.now()
 
   const jarName = mainUrl.substring(mainUrl.lastIndexOf('/'), mainUrl.length - 4)
   const endOfUrlToLookFor = `${jarName}-${classifier}.jar`
@@ -31,13 +36,15 @@ const classifierjar: RequestHandler = async (req, res) => {
     return Promise.reject()
   })
 
-
   try {
     return res.redirect(getRedirectUrl(await PromiseAny(fetchPromises)))
   } catch (e) {
     if (!(e instanceof AggregateError)) {
       throw e
     }
+  } finally {
+    const finishedTime = Date.now()
+    console.log(`classifier_main_request=${fetchedTime - startTime},classifier_sub_requests=${finishedTime - fetchedTime}`)
   }
 
   return res.sendStatus(404)
