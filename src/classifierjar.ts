@@ -8,11 +8,15 @@ export const classifierTries = 10
 const classifierjar: RequestHandler = async (req, res) => {
   const { id, file, classifier } = req.params
 
+  const startTime = Date.now()
+
   const mainResponse = await fetchDownloadUrl(id, file)
   if (!mainResponse.ok) {
     return res.sendStatus(mainResponse.status)
   }
   const mainUrl = await mainResponse.text()
+
+  const fetchedTime = Date.now()
 
   const jarName = mainUrl.substring(mainUrl.lastIndexOf('/'), mainUrl.length - 4)
   const endOfUrlToLookFor = `${jarName}-${classifier}.jar`
@@ -38,6 +42,9 @@ const classifierjar: RequestHandler = async (req, res) => {
     if (!(e instanceof AggregateError)) {
       throw e
     }
+  } finally {
+    const finishedTime = Date.now()
+    console.log(`classifier_main_request=${fetchedTime - startTime},classifier_sub_requests=${finishedTime - fetchedTime}`)
   }
 
   return res.sendStatus(404)
