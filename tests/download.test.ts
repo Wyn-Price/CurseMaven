@@ -74,15 +74,6 @@ describe('POM Generation', () => {
   })
 })
 
-describe('Rewrite download binary should be correct', () => {
-  test("/download-binary/ content length should be correct", async () => {
-    //curse.maven:pehkui-319596:3577084:sources-dev
-    const res = await requestWithSupertest.head("/download-binary/3577/85/Pehkui-3.1.0%252B1.18.1-forge-sources-dev.jar")
-    expect(res.status).toStrictEqual(200)
-    expect(res.header["content-length"]).toStrictEqual("155294")
-  })
-})
-
 describe('/test/ should run correctly.', () => {
   //curse.maven:jei-238222:2724420
   test("When the file ID exists ", async () => {
