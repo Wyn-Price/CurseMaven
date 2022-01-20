@@ -23,8 +23,8 @@
       "destination": "/src/index.ts"
     },
     {
-      "source": "/download-binary/(.+)",
-      "destination": "/src/index.ts"
+      "source": "/download-binary/(.+)%25(2B)(.+)",
+      "destination": "https://media.forgecdn.net/files/$1%$2$3"
     },
     {
       "source": "/test/(.+)",
