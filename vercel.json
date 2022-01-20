@@ -23,8 +23,12 @@
       "destination": "/src/index.ts"
     },
     {
-      "source": "/download-binary/(.+)",
-      "destination": "/src/index.ts"
+      "__comment1": "Currently, the only known problamatic char is the + (2B).",
+      "__comment2": "Here, I proxy pass to the cf media server and replace the double encoded",
+      "__comment3": "character (+ -> %2B -> %252B), with the single encoded version (%252B -> %2B).",
+      "__comment4": "This means that gradle doesn't decode but not encode, and curseforge is happy with the url.",
+      "source": "/download-binary/(.+)%25(2B)(.+)",
+      "destination": "https://media.forgecdn.net/files/$1%$2$3"
     },
     {
       "source": "/test/(.+)",

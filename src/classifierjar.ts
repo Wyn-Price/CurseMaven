@@ -28,10 +28,12 @@ const classifierjar: RequestHandler = async (req, res) => {
   //Run all requests async, and get the first one (if any) to resolve.
   const fetchPromises = Array.from({ length: classifierTries }, async (_, i) => {
     const response = await fetchDownloadUrl(id, numFileId + i + 1)
-    log(`classifier_${i + 1}_fetched`)
+    const time = Date.now()
+    log(`classifier_${i + 1}_fetched in ${time - fetchedTime}ms`)
+
     if (response.ok) {
       const fileUrl = await getFetchedData(response)
-      log(`classifier_${i + 1}_parsed`)
+      log(`classifier_${i + 1}_parsed in ${Date.now() - time}ms`)
       if (fileUrl.endsWith(endOfUrlToLookFor)) {
         return fileUrl
       }
