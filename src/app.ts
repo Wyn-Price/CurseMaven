@@ -1,5 +1,6 @@
 import express, { RequestHandler } from "express";
 import classifierjar from "./classifierjar";
+import direct from "./direct";
 import normaljar from "./normaljar";
 import pom from "./pom";
 import testing from "./testing";
@@ -51,17 +52,18 @@ const verifyParams: RequestHandler = (req, res, next) => {
     return res.sendStatus(404)
   }
 
-  log(`project_id=${id},project_named=${name},file_id=${file},classifier=${classifier ?? 'n/a'}`)
-
   req.params.id = id
   req.params.name = name
   req.params.classifier = classifier
+
+  log(`project_id=${id},project_named=${name},file_id=${file},classifier=${classifier ?? 'n/a'}`)
 
   next()
 }
 
 app.get(`${urlBase}.jar`, verifyParams, normaljar, classifierjar)
 app.get(`${urlBase}.pom`, verifyParams, pom)
+app.get(`${urlBase}.*`, verifyParams, direct)
 
 app.get("/test/:id/:file/:classifier?", testing)
 

@@ -30,6 +30,22 @@ describe('Normal Download URL', () => {
 })
 
 
+describe('Direct Download URL', () => {
+  test('Normal zip should be correct', async () => {
+    //curse.maven:rlcraft-285109:3575903
+    const res = await requestWithSupertest.get(downloadUrl('rlcraft', '285109', '3575903', '.zip'))
+    expect(res.status).toStrictEqual(302)
+    expect(res.headers['location']).toStrictEqual("https://edge.forgecdn.net/files/3575/903/RLCraft%201.12.2%20-%20Release%20v2.9.zip")
+  })
+
+  test("Normal Zip that doesn't exist should return 404", async () => {
+    //curse.maven:invalid-12345:12345
+    const res = await requestWithSupertest.get(downloadUrl('invalid', '12345', '54321', '.zip'))
+    expect(res.status).toStrictEqual(404)
+  })
+})
+
+
 describe('Classifier Download URL', () => {
   test('Classifier Jar should be correct', async () => {
     //curse.maven:ctm-267602:2809915:api
@@ -47,6 +63,7 @@ describe('Classifier Download URL', () => {
 
   test("Classifier Jar where original jar doesn't exist should return 404", async () => {
     //curse.maven:invalid-12345:12345:sources
+    // console.log(downloadUrl('invalid', '12345', '54321', '-sources.jar'))
     const res = await requestWithSupertest.get(downloadUrl('invalid', '12345', '54321', '-sources.jar'))
     expect(res.status).toStrictEqual(404)
   })
