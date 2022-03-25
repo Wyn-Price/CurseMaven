@@ -1,9 +1,6 @@
 # CurseMaven
 A more robust alternative to the normal curseforge maven, that takes in the project id and file id, rather than getting the artifacts from the jar name.
 
-# THIS IS THE TESTING VERSION FOR THE NEW CF API
-All urls should point to https://cursemaven.com/
-
 # Adding the Maven
 Add `https://cursemaven.com/` as a maven repository, like normal.
 ```gradle
