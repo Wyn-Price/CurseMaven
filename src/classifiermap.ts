@@ -10,7 +10,10 @@
 //
 // Will also return null if no main file id can be found.
 const createClassifierMap = (fileIds: string) => {
-  const mainFileMatch = fileIds.match(/^\d+/)
+  let regexResult: RegExpExecArray
+
+  const mainFileIdRegex = /^\d+/
+  const mainFileMatch = fileIds.match(mainFileIdRegex)
   if (mainFileMatch === null) {
     return null
   }
@@ -19,7 +22,6 @@ const createClassifierMap = (fileIds: string) => {
 
   //Populate the classifier map:
   const fileIdLocationRegex = /-(.+?)-(\d+)/g
-  let regexResult: RegExpExecArray
   while ((regexResult = fileIdLocationRegex.exec(fileIds)) !== null) {
     //fileIds: -sources-2724421
     //  classifier: sources
@@ -30,6 +32,18 @@ const createClassifierMap = (fileIds: string) => {
     classifierMap[classifier] = id
   }
 
+  const leftoverClassifiers = fileIds.replace(mainFileIdRegex, "").replace(fileIdLocationRegex, "")
+  const sequentialRegex = /-([^-]+)/g
+  let sequentialCounter = 1
+  while ((regexResult = sequentialRegex.exec(leftoverClassifiers)) !== null) {
+    //fileIds: -sources
+    //  classifier: sources
+    //  id: $mainid + (++$sequentialCounter)
+
+    classifierMap[regexResult[1]] = String(parseInt(main) + (sequentialCounter++))
+  }
+
   return { main, classifierMap }
 }
+
 export default createClassifierMap

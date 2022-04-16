@@ -53,6 +53,20 @@ describe('Classifier Download URL', () => {
     expect(res.headers['location']).toStrictEqual("https://edge.forgecdn.net/files/2809/916/CTM-MC1.12.2-1.0.0.29-api.jar")
   })
 
+  test('Sequential Classifiers should be correct', async () => {
+    //curse.maven:ctm-267602:2809915-api:api
+    const res = await requestWithSupertest.get(downloadUrl('ctm', '267602', '2809915-api', '-api.jar'))
+    expect(res.status).toStrictEqual(302)
+    expect(res.headers['location']).toStrictEqual("https://edge.forgecdn.net/files/2809/916/CTM-MC1.12.2-1.0.0.29-api.jar")
+  })
+
+  test('Stacked Sequential Classifiers should be correct', async () => {
+    //curse.maven:jer-240630:2452535-deobf-sources-api:api
+    const res = await requestWithSupertest.get(downloadUrl('jer', '240630', '2452535-deobf-sources-api', '-api.jar'))
+    expect(res.status).toStrictEqual(302)
+    expect(res.headers['location']).toStrictEqual("https://edge.forgecdn.net/files/2452/538/JustEnoughResources-1.12-0.8.2.20-api.jar")
+  })
+
   test('Classifier Jar w/ problamatic chars should be correct', async () => {
     //curse.maven:pehkui-319596:3577084-sources-dev-3577085:sources-dev
     const res = await requestWithSupertest.get(downloadUrl('pehkui', '319596', '3577084-sources-dev-3577085', '-sources-dev.jar'))
