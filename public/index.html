@@ -66,8 +66,8 @@
             <li><span class="text-highlight">&lt;projectid&gt;</span> -&gt; The project id of the file you want to add
                 as a dependency.</li>
             <br>
-            <li><span class="text-highlight">&lt;fileid&gt;</span> -&gt; The file id of the file you want to add as a
-                dependency.</li>
+            <li><span class="text-highlight">&lt;fileids&gt;</span> -&gt; The file ids of the file you want to add as a
+                dependency, plus the any optional classifiers. (Read below for more info)</li>
         </ul>
         <br>
         <h2>Getting the IDs</h2>
@@ -76,8 +76,14 @@
         </p>
         <a href="/projectid.png"><img height="300px" src="/projectid.png" /></a>
         <h4>File ID</h4>
-        <p>To get the file ID, go to the download page of file you want to use, and the file ID will be in the URL.</p>
+        <p>To get a File ID, go to the download page of file you want to use, and the file ID will be in the URL.</p>
         <a href="/fileid.png"><img height="300px" src="/fileid.png" /></a>
+        <h4>Classifier Ids</h4>
+        <p>You can define classifiers for cursemaven to look for in the <span
+                class="text-highlight">&lt;fileids&gt;</span> section</p>
+        <p>Simply add <span class="text-highlight">-&lt;name&gt;-&lt;id&gt;</span> for every classifier you want.</p>
+        <p>For example, say you had the file ID 1234 and wanted to add the file Id 5678 as sources, the fileid would
+            be <span class="text-highlight">1234-sources-5678</span> </p>
         <br>
         <h2>Examples</h2>
         <a href="/forge"> Forge example </a> <br>
@@ -95,10 +101,17 @@
         <p>Would point <a href="https://www.curseforge.com/minecraft/mc-mods/ctm/files/2642375">here</a> with the scope
             <span class="text-highlight">implementation</span>, and be decompiled by ForgeGradle
         </p>
+        <br>
+        <pre class="text-highlight big"><span class="code-orange">dependencies</span> {
+    implementation <span class="code-yellow">"curse.maven:mouse-tweaks-60089:3399291-sources-3399292"</span>
+}</pre>
+        <p>Would point <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399291">here</a>, and
+            the
+            sources pointing <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399292">here</a>
+        </p>
         <h2>Testing</h2>
-        <p>To test cursemaven, get the project id and file id (and optional classifier), and navigate to
-            <span
-                class="text-highlight">https://cursemaven.com/test/&lt;ProjectId&gt;/&lt;FileId&gt;/&lt;Classifier?&gt;</span>
+        <p>To test cursemaven, get the project id and file ids, and navigate to
+            <span class="text-highlight">https://cursemaven.com/test/&lt;ProjectId&gt;/&lt;FileIds&gt;</span>
         </p>
         <h2>Special Thanks</h2>
         <ul>
