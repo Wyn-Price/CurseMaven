@@ -82,8 +82,12 @@
         <p>You can define classifiers for cursemaven to look for in the <span
                 class="text-highlight">&lt;fileids&gt;</span> section</p>
         <p>Simply add <span class="text-highlight">-&lt;name&gt;-&lt;id&gt;</span> for every classifier you want.</p>
-        <p>For example, say you had the file ID 1234 and wanted to add the file Id 5678 as sources, the fileid would
-            be <span class="text-highlight">1234-sources-5678</span> </p>
+        <p>For example, say you had <span class="text-highlight">curse.maven:project-11111:12345</span> and wanted to
+            add the file id 56789 as sources, you would now have:
+            <span class="text-highlight">curse.maven:project-11111:12345<span class="code-yellow">-sources-56789</span>
+            </span>
+        </p>
+        <p>This work for any classifier, not just sources, and stacks. You can do as many classifiers as you want</p>
         <br>
         <h2>Examples</h2>
         <a href="/forge"> Forge example </a> <br>
@@ -103,11 +107,14 @@
         </p>
         <br>
         <pre class="text-highlight big"><span class="code-orange">dependencies</span> {
-    implementation <span class="code-yellow">"curse.maven:mouse-tweaks-60089:3399291-sources-3399292"</span>
+    implementation <span class="code-yellow">"curse.maven:mouse-tweaks-60089:3399291-sources-3399292-api-3399293"</span>
 }</pre>
-        <p>Would point <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399291">here</a>, and
-            the
-            sources pointing <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399292">here</a>
+        <p>Would point <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399291">here
+                (3399291)</a>
+            the sources pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399292">here (3399292)</a>
+            and the api pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399293">here (3399293)</a>
         </p>
         <h2>Testing</h2>
         <p>To test cursemaven, get the project id and file ids, and navigate to
