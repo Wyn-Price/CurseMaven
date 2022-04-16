@@ -36,6 +36,7 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
   output.push(`MainFileId: ${main}`)
   const mainResponse = await fetchUrlTest(getDownloadUrl(id, main), output, flush)
   output.push(`Resolved ${mainResponse.status}`)
+  output.push(`Found ${await getFetchedData(mainResponse)}`)
   if (!mainResponse.ok) {
     output.push("\n\nJAR WAS NOT FOUND")
     return
@@ -55,7 +56,7 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
     output.push(`    Response: ${response.status}`)
     if (response.ok) {
       const fileUrl = await getFetchedData(response)
-      output.push(`    ${fileUrl}`)
+      output.push(`    Found: ${fileUrl}`)
     }
   }
 }
