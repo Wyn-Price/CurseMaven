@@ -89,6 +89,19 @@
         </p>
         <p>This work for any classifier, not just sources, and stacks. You can do as many classifiers as you want</p>
         <br>
+        <p>If the classifier was uploaded sequentially to the main ID (file Ids are sequential), then you can skip the
+            extra numbers and instead put the list of classifiers in order</p>
+        <div>
+            <div>For example,</div>
+            <div class="text-highlight">curse.maven:project-11111:12345-sources-12346-debof-12347-api-12348</div>
+            <div>is the same as </div>
+            <div class="text-highlight">curse.maven:project-11111:12345-sources-debof-api</div>
+            <div>as all the numbers are sequential.</div>
+        </div>
+        <p>If you mix sequential and non-sequential file ids, then ensure that the sequential file ids come after the
+            non-sequential file ids: <span class="text-highlight">12345-sources-56789-api</span> is the same as <span
+                class="text-highlight">12345-sources-56789-api-12346</span></p>
+        <br>
         <h2>Examples</h2>
         <a href="/forge"> Forge example </a> <br>
         <a href="/fabric"> Fabric example </a> <br>
@@ -115,6 +128,23 @@
             <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399292">here (3399292)</a>
             and the api pointing
             <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399293">here (3399293)</a>
+        </p>
+        <br>
+        <pre class="text-highlight big"><span class="code-orange">dependencies</span> {
+    implementation <span class="code-yellow">"curse.maven:jer-240630:2452535-deobf-sources-api"</span>
+}</pre>
+        <p>Would point <a
+                href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452535">here
+                (2452535)</a>
+            the deobf pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452536">here
+                (2452536)</a>
+            the sources pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452537">here
+                (2452537)</a>
+            and the api pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452538">here
+                (2452538)</a>
         </p>
         <h2>Testing</h2>
         <p>To test cursemaven, get the project id and file ids, and navigate to
