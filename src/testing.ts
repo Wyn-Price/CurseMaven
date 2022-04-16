@@ -1,18 +1,15 @@
 import { RequestHandler } from 'express';
-import { classifierTries } from './classifierjar';
+import createClassifierMap from './classifiermap';
 import { authFetch, getDownloadUrl, getFetchedData, getRedirectUrl } from './util';
 
 
 const testing: RequestHandler = async (req, res) => {
-  const { id, file, classifier } = req.params
+  const { id, fileIds } = req.params
   const output = [
     `Raw URL: ${req.url}`,
     ``,
     `ProjectId: ${id}`,
-    `FileId: ${file}`,
-    `Classifier: ${classifier}`,
-    ``,
-    `Download URL: ${getDownloadUrl(id, file)}`,
+    `FileIds: ${fileIds}`
   ]
 
   const flush = () => res.send(output.join("\n"))
@@ -20,7 +17,8 @@ const testing: RequestHandler = async (req, res) => {
   res.contentType("text/plain")
 
   try {
-    await runTests(id, file, classifier, output, flush)
+    await runTests(id, fileIds, output, flush)
+    flush()
   } catch (e) {
     if (!(e instanceof ExitError)) {
       output.push("\n\n")
@@ -32,52 +30,34 @@ const testing: RequestHandler = async (req, res) => {
   }
 }
 
-const runTests = async (id: string, file: string, classifier: string, output: string[], flush: () => void) => {
-  const mainResponse = await fetchUrlTest(getDownloadUrl(id, file), output, flush)
-  output.push(`Resolved ${mainResponse.status}`)
+const runTests = async (id: string, fileIds: string, output: string[], flush: () => void) => {
+  const { main, classifierMap } = createClassifierMap(fileIds)
 
+  output.push(`MainFileId: ${main}`)
+  const mainResponse = await fetchUrlTest(getDownloadUrl(id, main), output, flush)
+  output.push(`Resolved ${mainResponse.status}`)
   if (!mainResponse.ok) {
     output.push("\n\nJAR WAS NOT FOUND")
-    return flush()
+    return
   }
 
-  const mainResponseBody = await getFetchedData(mainResponse)
-  output.push(`    ${mainResponseBody}`)
-
-
-  if (classifier === undefined || classifier === '') {
-    output.push(`\nResult: ${getRedirectUrl(mainResponseBody)}`)
-    return flush()
+  const allClassifiers = Object.keys(classifierMap)
+  if (allClassifiers.length === 0) {
+    return
   }
+  output.push("\n\nClassifierIdMap:")
+  for (let i = 0; i < allClassifiers.length; i++) {
+    const classifier = allClassifiers[i]
+    const classifierId = classifierMap[classifier]
+    output.push(`\n${classifier} (${classifierId}):`)
 
-  const jarName = mainResponseBody.substring(mainResponseBody.lastIndexOf('/'), mainResponseBody.length - 4)
-  const endOfUrlToLookFor = `${jarName}-${classifier}.jar`
-  const numId = parseInt(file)
-
-
-  output.push(`ParsedID: ${numId}`)
-  output.push(`Searching for classifier: '${classifier}'`)
-  output.push(`Jarname: '${jarName}-${classifier}.jar'`)
-  output.push(`Tries: ${classifierTries}`)
-
-  for (let i = 0; i < classifierTries; i++) {
-    output.push(`\nIteration: ${i}`)
-    const response = await fetchUrlTest(getDownloadUrl(id, numId + i + 1), output, flush)
+    const response = await fetchUrlTest(getDownloadUrl(id, classifierId), output, flush)
     output.push(`    Response: ${response.status}`)
     if (response.ok) {
       const fileUrl = await getFetchedData(response)
-
-      const found = fileUrl.endsWith(endOfUrlToLookFor)
-      output.push(`    '${fileUrl}' -> ${found}`)
-      if (found) {
-        output.push(`\nResult: ${getRedirectUrl(fileUrl)}`)
-        return flush()
-      }
+      output.push(`    ${fileUrl}`)
     }
   }
-  output.push("\n\nCLASSIFIER WAS NOT FOUND")
-  flush()
-
 }
 
 const fetchUrlTest = async (url: string, output: string[], flush: () => void) => {

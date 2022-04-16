@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { fetchDownloadUrl, getFetchedData } from "./util";
 
 const direct: RequestHandler = async (req, res) => {
-  const { id, file } = req.params
+  const { id, file } = res.locals
 
   const response = await fetchDownloadUrl(id, file)
   if (response.ok) {

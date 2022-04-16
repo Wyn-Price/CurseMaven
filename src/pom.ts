@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
 const pom: RequestHandler = async (req, res) => {
-  const { name, id, file } = req.params
+  const { name, id, file } = res.locals
   return res.send(
     `<?xml version="1.0" encoding="UTF-8"?>
     <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
