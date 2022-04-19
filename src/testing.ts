@@ -31,7 +31,12 @@ const testing: RequestHandler = async (req, res) => {
 }
 
 const runTests = async (id: string, fileIds: string, output: string[], flush: () => void) => {
-  const { main, classifierMap } = createClassifierMap(fileIds)
+  const map = createClassifierMap(fileIds)
+  if (map === null) {
+    output.push("Unable to generate classifier map")
+    return
+  }
+  const { main, classifierMap } = map
 
   output.push(`MainFileId: ${main}`)
   const mainResponse = await fetchUrlTest(getDownloadUrl(id, main), output, flush)

@@ -10,6 +10,9 @@
 //
 // Will also return null if no main file id can be found.
 const createClassifierMap = (fileIds: string) => {
+  if (fileIds.length > 100) {
+    return null
+  }
   let regexResult: RegExpExecArray
 
   const mainFileIdRegex = /^\d+/

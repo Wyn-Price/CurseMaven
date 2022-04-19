@@ -26,7 +26,11 @@ const verifyParams: RequestHandler = (req, res, next) => {
     return res.status(400).send("Descriptor now must be in the format `<modname>-<projectid>")
   }
 
-  const { main, classifierMap } = createClassifierMap(fileIds)
+  const map = createClassifierMap(fileIds);
+  if (map === null) {
+    return res.status(400).send("Unable to generate classifier map")
+  }
+  const { main, classifierMap } = map
 
   const name = descriptorSplit.slice(0, descriptorSplit.length - 1).join("-")
   const id = descriptorSplit[descriptorSplit.length - 1]
