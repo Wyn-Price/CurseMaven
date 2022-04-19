@@ -54,7 +54,7 @@
         <br>
         <h2>Usage</h2>
         <p>The dependency format is as follows: <span
-                class="text-highlight">curse.maven:&lt;descriptor&gt;-&lt;projectid&gt;:&lt;fileid&gt;</span></p>
+                class="text-highlight">curse.maven:&lt;descriptor&gt;-&lt;projectid&gt;:&lt;fileids&gt;</span></p>
         <ul>
             <li><span class="text-highlight">curse.maven</span> -&gt; Required. Marks the dependency to be resolved by
                 the curse maven website.</li>
@@ -87,9 +87,9 @@
             <span class="text-highlight">curse.maven:project-11111:12345<span class="code-yellow">-sources-56789</span>
             </span>
         </p>
-        <p>This work for any classifier, not just sources, and stacks. You can do as many classifiers as you want</p>
+        <p>This work for any classifier, and stacks; you can do as many classifiers as you want</p>
         <br>
-        <p>If the classifier was uploaded sequentially to the main ID (file Ids are sequential), then you can skip the
+        <p>If the classifier was uploaded sequentially to the main file (file Ids are sequential), then you can skip the
             extra numbers and instead put the list of classifiers in order</p>
         <div>
             <div>For example,</div>
@@ -99,8 +99,14 @@
             <div>as all the numbers are sequential.</div>
         </div>
         <p>If you mix sequential and non-sequential file ids, then ensure that the sequential file ids come after the
-            non-sequential file ids: <span class="text-highlight">12345-sources-56789-api</span> is the same as <span
-                class="text-highlight">12345-sources-56789-api-12346</span></p>
+            non-sequential file ids:
+            <br>
+            <span class="text-highlight">12345-sources-56789-api</span> =
+            <span class="text-highlight">12345-sources-56789-api-12346</span>
+            <br>
+            <span class="text-highlight">12345-api-sources-5678</span> =
+            <span class="text-highlight">12345-api-sources-5678</span> (api-sources) is a single classifier
+        </p>
         <br>
         <h2>Examples</h2>
         <a href="/forge"> Forge example </a> <br>
