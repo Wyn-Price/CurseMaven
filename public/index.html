@@ -54,7 +54,7 @@
         <br>
         <h2>Usage</h2>
         <p>The dependency format is as follows: <span
-                class="text-highlight">curse.maven:&lt;descriptor&gt;-&lt;projectid&gt;:&lt;fileid&gt;</span></p>
+                class="text-highlight">curse.maven:&lt;descriptor&gt;-&lt;projectid&gt;:&lt;fileids&gt;</span></p>
         <ul>
             <li><span class="text-highlight">curse.maven</span> -&gt; Required. Marks the dependency to be resolved by
                 the curse maven website.</li>
@@ -66,8 +66,8 @@
             <li><span class="text-highlight">&lt;projectid&gt;</span> -&gt; The project id of the file you want to add
                 as a dependency.</li>
             <br>
-            <li><span class="text-highlight">&lt;fileid&gt;</span> -&gt; The file id of the file you want to add as a
-                dependency.</li>
+            <li><span class="text-highlight">&lt;fileids&gt;</span> -&gt; The file ids of the file you want to add as a
+                dependency, plus the any optional classifiers. (Read below for more info)</li>
         </ul>
         <br>
         <h2>Getting the IDs</h2>
@@ -76,8 +76,37 @@
         </p>
         <a href="/projectid.png"><img height="300px" src="/projectid.png" /></a>
         <h4>File ID</h4>
-        <p>To get the file ID, go to the download page of file you want to use, and the file ID will be in the URL.</p>
+        <p>To get a File ID, go to the download page of file you want to use, and the file ID will be in the URL.</p>
         <a href="/fileid.png"><img height="300px" src="/fileid.png" /></a>
+        <h4>Classifier Ids</h4>
+        <p>You can define classifiers for cursemaven to look for in the <span
+                class="text-highlight">&lt;fileids&gt;</span> section</p>
+        <p>Simply add <span class="text-highlight">-&lt;name&gt;-&lt;id&gt;</span> for every classifier you want.</p>
+        <p>For example, say you had <span class="text-highlight">curse.maven:project-11111:12345</span> and wanted to
+            add the file id 56789 as sources, you would now have:
+            <span class="text-highlight">curse.maven:project-11111:12345<span class="code-yellow">-sources-56789</span>
+            </span>
+        </p>
+        <p>This work for any classifier, and stacks; you can do as many classifiers as you want</p>
+        <br>
+        <p>If the classifier was uploaded sequentially to the main file (file Ids are sequential), then you can skip the
+            extra numbers and instead put the list of classifiers in order</p>
+        <div>
+            <div>For example,</div>
+            <div class="text-highlight">curse.maven:project-11111:12345-sources-12346-debof-12347-api-12348</div>
+            <div>is the same as </div>
+            <div class="text-highlight">curse.maven:project-11111:12345-sources-debof-api</div>
+            <div>as all the numbers are sequential.</div>
+        </div>
+        <p>If you mix sequential and non-sequential file ids, then ensure that the sequential file ids come after the
+            non-sequential file ids:
+            <br>
+            <span class="text-highlight">12345-sources-56789-api</span> =
+            <span class="text-highlight">12345-sources-56789-api-12346</span>
+            <br>
+            <span class="text-highlight">12345-api-sources-5678</span> =
+            <span class="text-highlight">12345-api-sources-5678</span> (api-sources) is a single classifier
+        </p>
         <br>
         <h2>Examples</h2>
         <a href="/forge"> Forge example </a> <br>
@@ -95,10 +124,37 @@
         <p>Would point <a href="https://www.curseforge.com/minecraft/mc-mods/ctm/files/2642375">here</a> with the scope
             <span class="text-highlight">implementation</span>, and be decompiled by ForgeGradle
         </p>
+        <br>
+        <pre class="text-highlight big"><span class="code-orange">dependencies</span> {
+    implementation <span class="code-yellow">"curse.maven:mouse-tweaks-60089:3399291-sources-3399292-api-3399293"</span>
+}</pre>
+        <p>Would point <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399291">here
+                (3399291)</a>
+            the sources pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399292">here (3399292)</a>
+            and the api pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks/files/3399293">here (3399293)</a>
+        </p>
+        <br>
+        <pre class="text-highlight big"><span class="code-orange">dependencies</span> {
+    implementation <span class="code-yellow">"curse.maven:jer-240630:2452535-deobf-sources-api"</span>
+}</pre>
+        <p>Would point <a
+                href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452535">here
+                (2452535)</a>
+            the deobf pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452536">here
+                (2452536)</a>
+            the sources pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452537">here
+                (2452537)</a>
+            and the api pointing
+            <a href="https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer/files/2452538">here
+                (2452538)</a>
+        </p>
         <h2>Testing</h2>
-        <p>To test cursemaven, get the project id and file id (and optional classifier), and navigate to
-            <span
-                class="text-highlight">https://cursemaven.com/test/&lt;ProjectId&gt;/&lt;FileId&gt;/&lt;Classifier?&gt;</span>
+        <p>To test cursemaven, get the project id and file ids, and navigate to
+            <span class="text-highlight">https://cursemaven.com/test/&lt;ProjectId&gt;/&lt;FileIds&gt;</span>
         </p>
         <h2>Special Thanks</h2>
         <ul>

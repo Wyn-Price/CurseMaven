@@ -1,11 +1,11 @@
 body {
     background-color: #363636;
     color: whitesmoke;
-    font-family: BlinkMacSystemFont,-apple-system,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue","Helvetica","Arial",sans-serif;
+    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 .main-container {
-    width: min(75%, 750px);
+    max-width: 100%;
     padding: 50px 100px;
     font-size: 1em;
     font-weight: 400;
@@ -19,12 +19,14 @@ body {
     border-radius: 5px;
     display: inline-block;
 }
+
 .text-highlight.big {
     padding: 15px;
     border-style: solid;
     border-color: black;
     border-radius: 10px;
 }
+
 .text-highlight.even {
     padding: 5px 20px;
 }
@@ -34,8 +36,10 @@ a {
     text-decoration: none;
 }
 
-a:hover, a:active, a:focus {
-    color:#c33c33;
+a:hover,
+a:active,
+a:focus {
+    color: #c33c33;
 }
 
 .subtitle-padding-start {
@@ -50,6 +54,7 @@ a:hover, a:active, a:focus {
 .code-orange {
     color: #ac885b
 }
+
 .code-yellow {
     color: #f9ee98
 }
