@@ -78,6 +78,7 @@ const verifyParams: RequestHandler = (req, res, next) => {
 
 app.get(`${urlBase}.jar`, verifyParams, normaljar)
 app.get(`${urlBase}.pom`, verifyParams, pom)
+app.get(`${urlBase}.md5`, (_, res) => res.sendStatus(404))
 app.get(`${urlBase}.*`, verifyParams, direct)
 
 app.get("/test/:id/:fileIds/:classifier?", testing)
