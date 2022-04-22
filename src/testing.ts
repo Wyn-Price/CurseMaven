@@ -5,10 +5,19 @@ import { authFetch, getDownloadUrl, getFetchedData, getRedirectUrl } from './uti
 
 const testing: RequestHandler = async (req, res) => {
   const { id, fileIds } = req.params
+  const descriptorSplit = id.split("-")
+
+  const name = descriptorSplit.slice(0, descriptorSplit.length - 1).join("-")
+  const projId = descriptorSplit[descriptorSplit.length - 1]
+
   const output = [
     `Raw URL: ${req.url}`,
     ``,
-    `ProjectId: ${id}`,
+    `ProjectDescriptor: ${id}`,
+    `ProjectDescriptorSplit: ${descriptorSplit}`,
+    `ProjectName: ${name}`,
+    `ProjectId: ${projId}`,
+    ``,
     `FileIds: ${fileIds}`
   ]
 
@@ -17,7 +26,7 @@ const testing: RequestHandler = async (req, res) => {
   res.contentType("text/plain")
 
   try {
-    await runTests(id, fileIds, output, flush)
+    await runTests(projId, fileIds, output, flush)
     flush()
   } catch (e) {
     if (!(e instanceof ExitError)) {
@@ -31,6 +40,7 @@ const testing: RequestHandler = async (req, res) => {
 }
 
 const runTests = async (id: string, fileIds: string, output: string[], flush: () => void) => {
+
   const map = createClassifierMap(fileIds)
   if (map === null) {
     output.push("Unable to generate classifier map")
@@ -39,13 +49,7 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
   const { main, classifierMap } = map
 
   output.push(`MainFileId: ${main}`)
-  const mainResponse = await fetchUrlTest(getDownloadUrl(id, main), output, flush)
-  output.push(`Resolved ${mainResponse.status}`)
-  if (!mainResponse.ok) {
-    output.push(`Main Not found: ${mainResponse.statusText}`)
-    return
-  }
-  output.push(`Found ${await getFetchedData(mainResponse)}`)
+  await fetchUrlTest(id, main, output, flush)
 
   const allClassifiers = Object.keys(classifierMap)
   if (allClassifiers.length === 0) {
@@ -57,22 +61,23 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
     const classifierId = classifierMap[classifier]
     output.push(`\n${classifier} (${classifierId}):`)
 
-    const response = await fetchUrlTest(getDownloadUrl(id, classifierId), output, flush)
-    output.push(`    Response: ${response.status}`)
-    if (response.ok) {
-      const fileUrl = await getFetchedData(response)
-      output.push(`    Found: ${fileUrl}`)
-    } else {
-      output.push(`    Not Found: ${response.statusText}`)
-    }
+    await fetchUrlTest(id, classifierId, output, flush, "    ")
   }
 }
 
-const fetchUrlTest = async (url: string, output: string[], flush: () => void) => {
+const fetchUrlTest = async (id: string, fileId: string, output: string[], flush: () => void, prefix = "") => {
+  const url = getDownloadUrl(id, fileId)
   try {
     const fetched = await authFetch(url)
     output.push("GET: " + url)
-    return fetched
+    output.push(`${prefix}Response: ${fetched.status}`)
+    if (!fetched.ok) {
+      output.push(`${prefix}Not Found: ${fetched.statusText}`)
+      throw new ExitError()
+    }
+
+    const fileUrl = await getFetchedData(fetched)
+    output.push(`${prefix}Found: ${fileUrl}`)
   } catch (e) {
     output.push("\n\n")
     output.push("---------- ERROR ----------")
