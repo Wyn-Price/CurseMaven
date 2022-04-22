@@ -41,11 +41,11 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
   output.push(`MainFileId: ${main}`)
   const mainResponse = await fetchUrlTest(getDownloadUrl(id, main), output, flush)
   output.push(`Resolved ${mainResponse.status}`)
-  output.push(`Found ${await getFetchedData(mainResponse)}`)
   if (!mainResponse.ok) {
-    output.push("\n\nJAR WAS NOT FOUND")
+    output.push(`Main Not found: ${mainResponse.statusText}`)
     return
   }
+  output.push(`Found ${await getFetchedData(mainResponse)}`)
 
   const allClassifiers = Object.keys(classifierMap)
   if (allClassifiers.length === 0) {
@@ -62,6 +62,8 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
     if (response.ok) {
       const fileUrl = await getFetchedData(response)
       output.push(`    Found: ${fileUrl}`)
+    } else {
+      output.push(`    Not Found: ${response.statusText}`)
     }
   }
 }
