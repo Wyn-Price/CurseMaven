@@ -1,4 +1,6 @@
 # CurseMaven
+[![powered-by-vercel](https://user-images.githubusercontent.com/15876682/167162686-115e80ad-d6f2-44f5-bd36-4d506531e17e.svg)](https://vercel.com/?utm_source=wyn-price&utm_campaign=oss)
+
 A more robust alternative to the normal curseforge maven, that takes in the project id and file id, rather than getting the artifacts from the jar name.
 
 # Adding the Maven
