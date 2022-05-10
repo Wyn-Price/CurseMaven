@@ -1,3 +1,4 @@
+import escapeHTML from 'escape-html';
 import { RequestHandler } from 'express';
 import createClassifierMap from './classifiermap';
 import { authFetch, getDownloadUrl, getFetchedData, getRedirectUrl } from './util';
@@ -21,26 +22,27 @@ const testing: RequestHandler = async (req, res) => {
     `FileIds: ${fileIds}`
   ]
 
-  const flush = () => res.send(output.join("\n"))
-
-  res.contentType("text/plain")
 
   try {
-    await runTests(projId, fileIds, output, flush)
-    flush()
+    await runTests(projId, fileIds, output)
   } catch (e) {
     if (!(e instanceof ExitError)) {
       output.push("\n\n")
       output.push("---------- ERROR ----------")
       output.push("Unknown Error encounted")
-      output.push(String(e))
-      flush()
+      if (e instanceof Error) {
+        output.push(`${e.name}: ${e.message}`)
+        console.error("ERROR GENERATING TESTS:")
+        console.error(e)
+      }
     }
   }
+
+  res.contentType("text/plain")
+  res.send(escapeHTML(output.join("\n")))
 }
 
-const runTests = async (id: string, fileIds: string, output: string[], flush: () => void) => {
-
+const runTests = async (id: string, fileIds: string, output: string[]) => {
   const map = createClassifierMap(fileIds)
   if (map === null) {
     output.push("Unable to generate classifier map")
@@ -49,7 +51,7 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
   const { main, classifierMap } = map
 
   output.push(`MainFileId: ${main}`)
-  await fetchUrlTest(id, main, output, flush)
+  await fetchUrlTest(id, main, output)
 
   const allClassifiers = Object.keys(classifierMap)
   if (allClassifiers.length === 0) {
@@ -61,11 +63,11 @@ const runTests = async (id: string, fileIds: string, output: string[], flush: ()
     const classifierId = classifierMap[classifier]
     output.push(`\n${classifier} (${classifierId}):`)
 
-    await fetchUrlTest(id, classifierId, output, flush, "    ")
+    await fetchUrlTest(id, classifierId, output, "    ")
   }
 }
 
-const fetchUrlTest = async (id: string, fileId: string, output: string[], flush: () => void, prefix = "") => {
+const fetchUrlTest = async (id: string, fileId: string, output: string[], prefix = "") => {
   const url = getDownloadUrl(id, fileId)
   try {
     const fetched = await authFetch(url)
@@ -83,7 +85,6 @@ const fetchUrlTest = async (id: string, fileId: string, output: string[], flush:
     output.push("---------- ERROR ----------")
     output.push("Unable to fetch url " + url)
     output.push(String(e))
-    flush()
     throw new ExitError()
   }
 }

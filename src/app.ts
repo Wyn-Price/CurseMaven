@@ -1,3 +1,4 @@
+import escapeHTML from "escape-html";
 import express, { RequestHandler } from "express";
 import createClassifierMap from "./classifiermap";
 import direct from "./direct";
@@ -64,7 +65,7 @@ const verifyParams: RequestHandler = (req, res, next) => {
 
   const foundId = classifier === "" ? main : classifierMap[classifier]
   if (foundId === undefined) {
-    return res.status(404).send(`Unable to find classifier ${classifier} as it was not defined.`)
+    return res.status(404).send(`Unable to find classifier ${escapeHTML(classifier)} as it was not defined.`)
   }
 
   res.locals.id = id
