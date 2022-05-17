@@ -24,7 +24,7 @@ const verifyParams: RequestHandler = (req, res, next) => {
     verifyParamsOrThrow(req, res, next)
   } catch (err) {
     if (err instanceof InvalidParamsError) {
-      return res.status(err.statusCode).send(err.text)
+      return res.status(err.statusCode).send(escapeHTML(err.text))
     } else {
       throw err
     }
@@ -58,7 +58,7 @@ const verifyParamsOrThrow: RequestHandler = (req, res, next) => {
 
   const foundId = classifier === "" ? main : classifierMap[classifier]
   if (foundId === undefined) {
-    return res.status(404).send(`Unable to find classifier ${escapeHTML(classifier)} as it was not defined.`)
+    return res.status(404).send(`Unable to find classifier ${classifier} as it was not defined.`)
   }
 
 
