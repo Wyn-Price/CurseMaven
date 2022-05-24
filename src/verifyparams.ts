@@ -77,7 +77,7 @@ const checkGradleVersion = (req: Request) => {
     const match = ua.match(/Gradle\/([\d\\.]+)/)
     if (match !== null) {
       //Convert 7.2 --> 7.2.0
-      const segments = match[1].split("\\.")
+      const segments = match[1].split(".")
       while (segments.length < 3) {
         segments.push("0")
       }
