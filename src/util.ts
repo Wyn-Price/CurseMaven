@@ -10,16 +10,9 @@ export const getFetchedData = async (response: Response) => {
   return json.data
 }
 
-const doLogs = process.env.NODE_ENV !== "test"
-export const log = (data: string) => {
-  if (doLogs) {
-    console.log(data)
-  }
-}
-
 //Gets the redirect url for the given url. An example of this download url would be: https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar
 //
-//Due to an issue with apache's http client which gradle uses, some characters will be decoded, but not encoded. 
+//Due to an issue with apache's http client which gradle uses, some characters will be decoded, but not encoded.
 //This in junction with curseforge's media server needing the correct encoding means redirecting to the media server won't always work.
 //A fix for this is to redirect to `/download-binary/...`, instead of `https://media.forgecdn.net/files/...`. Doing this means I have to encode the
 //Jar name twice (hopfully) meaning that the apache issues don't occur, as the special characters won't show up in the decoding.
