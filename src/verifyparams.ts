@@ -73,10 +73,6 @@ const verifyParamsOrThrow: RequestHandler = (req, res, next) => {
   });
   res.setHeader("X-CurseMaven-Stats", params.toString());
 
-  // Legacy:
-  if (process.env.NODE_ENV !== "test") {
-      console.log(`project_id=${descriptorParts.id},project_named=${descriptorParts.name},file_id=${main},classifier=${classifier},gradle_version=${gradleVersion}`)
-  }
   next()
 }
 
