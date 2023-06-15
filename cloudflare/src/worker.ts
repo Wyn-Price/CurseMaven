@@ -1,10 +1,11 @@
+
 // TODO: configurable
-const PROXY_HOST_OVERRIDE = "cursemaven.com"
+const PROXY_HOST_OVERRIDE = process.env.PROXY_HOST_OVERRIDE;
 
 export default {
     async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
         ctx.passThroughOnException()
-        if (PROXY_HOST_OVERRIDE !== null) {
+        if (PROXY_HOST_OVERRIDE !== undefined) {
             const url = new URL(request.url);
             url.host = PROXY_HOST_OVERRIDE;
             request = new Request(url, request)
