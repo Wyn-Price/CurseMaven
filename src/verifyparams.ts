@@ -1,7 +1,6 @@
 import escapeHTML from 'escape-html';
 import { Request, RequestHandler } from 'express';
 import createClassifierMap from './classifiermap';
-import { log } from './util';
 
 type SplitData = {
   fileIdsSplit: string[];
@@ -61,12 +60,18 @@ const verifyParamsOrThrow: RequestHandler = (req, res, next) => {
     return res.status(404).send(`Unable to find classifier ${classifier} as it was not defined.`)
   }
 
-
   res.locals.id = descriptorParts.id
   res.locals.name = descriptorParts.name
   res.locals.file = foundId
 
-  log(`project_id=${descriptorParts.id},project_named=${descriptorParts.name},file_id=${main},classifier=${classifier},gradle_version=${gradleVersion}`)
+  const params = new URLSearchParams({
+    project_id: encodeURIComponent(descriptorParts.id),
+    project_named: encodeURIComponent(descriptorParts.name),
+    file_id: encodeURIComponent(main),
+    classifier: encodeURIComponent(classifier),
+    gradle_version: encodeURIComponent(gradleVersion)
+  });
+  res.setHeader("X-CurseMaven-Stats", params.toString());
 
   next()
 }
