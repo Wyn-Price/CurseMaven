@@ -4,7 +4,7 @@
   "description": "A more robust alternative to the curseforge maven",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "start http://localhost:3000 && vercel dev",
+    "dev": "vercel dev",
     "test": "cross-env NODE_ENV=test jest --testTimeout=30000",
     "vercel-build": "yarn test"
   },
@@ -40,6 +40,7 @@
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
     "tslint": "^6.1.3",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.2",
+    "vercel": "^24.2.3"
   }
 }

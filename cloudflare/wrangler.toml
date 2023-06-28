@@ -1,4 +1,4 @@
-name = "cloudflare"
+name = "cursemaven-stats"
 main = "src/worker.ts"
 compatibility_date = "2023-06-14"
 
