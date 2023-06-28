@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "builds": [
     {
-      "src": "src/index.ts",
+      "src": "src/app.ts",
       "use": "@vercel/node"
     },
     {
@@ -20,7 +20,7 @@
   "rewrites": [
     {
       "source": "/curse/maven/(.+)",
-      "destination": "/src/index.ts"
+      "destination": "/src/app.ts"
     },
     {
       "source": "/download-binary/(.+)%25(2B)(.+)",
@@ -28,7 +28,7 @@
     },
     {
       "source": "/test/(.+)",
-      "destination": "/src/index.ts"
+      "destination": "/src/app.ts"
     },
     {
       "source": "(.+)",
