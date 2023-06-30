@@ -2,12 +2,12 @@ export default {
     async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
         ctx.passThroughOnException()
 
-        const PROXY_HOST_OVERRIDE = await env.KV_DATADOG.get("PROXY_HOST_OVERRIDE")
-        if (PROXY_HOST_OVERRIDE !== null) {
-            const url = new URL(request.url);
-            url.host = PROXY_HOST_OVERRIDE;
-            request = new Request(url, request)
-        }
+        // const PROXY_HOST_OVERRIDE = await env.KV_DATADOG.get("PROXY_HOST_OVERRIDE")
+        // if (PROXY_HOST_OVERRIDE !== null) {
+        //     const url = new URL(request.url);
+        //     url.host = PROXY_HOST_OVERRIDE;
+        //     request = new Request(url, request)
+        // }
 
         const time = Date.now()
         const response = await fetch(request, { redirect: 'follow' })
@@ -71,7 +71,7 @@ export default {
 
         const datadogEndpoint = 'https://http-intake.logs.datadoghq.com/v1/input/'
 
-        const r = await fetch(datadogEndpoint, {
+        await fetch(datadogEndpoint, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: new Headers({
