@@ -4,7 +4,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['curseforge']
+    branches: ['beta']
 
 env:
   REGISTRY: ghcr.io
