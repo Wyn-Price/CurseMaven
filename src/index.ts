@@ -13,4 +13,9 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
+process.on('SIGINT', () => {
+  console.info("Interrupted");
+  process.exit(0);
+});
+
 export default server

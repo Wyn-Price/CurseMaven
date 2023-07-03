@@ -7,6 +7,6 @@ FROM gcr.io/distroless/nodejs18:nonroot AS run-env
 WORKDIR /app
 
 COPY --from=build-env /build/build.js .
-COPY public .
+COPY public ./public
 
 CMD ["build.js"]
