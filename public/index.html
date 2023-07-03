@@ -189,8 +189,14 @@
 
     </div>
     <script defer>
-        const HOST = window.location.origin;
-        Array.from(document.getElementsByClassName("inline-host")).forEach(e => e.textContent = HOST)
+        let host = window.location.host;
+        // Normalize subdomains
+        if (origin === "www.cursemaven.com") {
+            origin = "cursemaven.com";
+        } else if (origin === "cfa2.cursemaven.com") {
+            origin = "beta.cursemaven.com";
+        }
+        Array.from(document.getElementsByClassName("inline-host")).forEach(e => e.textContent = `https://${origin}`)
     </script>
 </body>
 
