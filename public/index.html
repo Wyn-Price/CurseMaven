@@ -42,7 +42,8 @@
             rather than getting the artifacts from the jar name.</p>
         <p>Like to live fast? <a href="https://beta.cursemaven.com">Try out the beta build of cursemaven</a></p>
         <h2>Adding the Maven</h2>
-        <p>Add <span class="inline-host text-highlight">https://cursemaven.com/</span> as a maven repository, like normal.</p>
+        <p>Add <span class="inline-host text-highlight">https://cursemaven.com/</span> as a maven repository, like
+            normal.</p>
 
         <pre class="text-highlight big"><span class="code-orange">repositories</span> {
     maven {
@@ -50,11 +51,26 @@
     }
 }</pre>
         <h3>Gradle 5+</h3>
-        <p>If you're using Gradle 5+, you can optimize the maven repository:</p>
+        <p>If you're using Gradle 5+, you can optimise the maven repository:</p>
         <pre class="text-highlight big"><span class="code-orange">repositories</span> {
     maven {
         url <span class="code-yellow">"<span class="inline-host">https://cursemaven.com/</span>"</span>
         content {
+            includeGroup <span class="code-yellow">"curse.maven"</span>
+        }
+    }
+}</pre>
+        <br>
+        <h3>Gradle 6.2+</h3>
+        <p>If you're using Gradle 6.2+, you can take this further:</p>
+        <pre class="text-highlight big"><span class="code-orange">repositories</span> {
+    exclusiveContent {
+        forRepository {
+            maven {
+                url <span class="code-yellow">"<span class="inline-host">https://cursemaven.com/</span>"</span>
+            }
+        }
+        filter {
             includeGroup <span class="code-yellow">"curse.maven"</span>
         }
     }
@@ -162,7 +178,8 @@
         </p>
         <h2>Testing</h2>
         <p>To test cursemaven, get the project id and file ids, and navigate to
-            <span class="text-highlight"><span class="inline-host">https://cursemaven.com</span>/test/&lt;ProjectId&gt;/&lt;FileIds&gt;</span>
+            <span class="text-highlight"><span
+                    class="inline-host">https://cursemaven.com</span>/test/&lt;ProjectId&gt;/&lt;FileIds&gt;</span>
         </p>
         <h2>Special Thanks</h2>
         <ul>
@@ -171,7 +188,7 @@
             <li><a href="https://twitter.com/Bran_D0ne">NeusFear</a> for helping with the website and hosting.</li>
         </ul>
         <div class="footer text-highlight even">
-            <p>Curse Maven is not affiliated, associated, authorized, endorsed by, or in any way officially connected
+            <p>Curse Maven is not affiliated, associated, authorised, endorsed by, or in any way officially connected
                 with CurseForge, or any of its subsidiaries or its affiliates.
                 The official CurseForge website can be found at https://www.curseforge.com/, with the official maven
                 endpoint can be found at https://www.curseforge.com/api/maven/.</p>
@@ -190,7 +207,7 @@
     </div>
     <script defer>
         let host = window.location.host;
-        // Normalize subdomains
+        // Normalise subdomains
         if (host === "www.cursemaven.com") {
             host = "cursemaven.com";
         } else if (host === "cfa2.cursemaven.com") {
