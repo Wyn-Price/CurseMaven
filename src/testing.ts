@@ -80,6 +80,9 @@ const fetchUrlTest = async (id: string, fileId: string, output: string[], prefix
 
     const fileUrl = await getFetchedData(fetched)
     output.push(`${prefix}Found: ${fileUrl}`)
+
+    const redirectUrl = await getRedirectUrl(fileUrl)
+    output.push(`${prefix}Redirected to ${redirectUrl}`)
   } catch (e) {
     output.push("\n\n")
     output.push("---------- ERROR ----------")

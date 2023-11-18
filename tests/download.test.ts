@@ -22,6 +22,13 @@ describe('Normal Download URL', () => {
     expect(res.headers['location']).toStrictEqual("/download-binary/3335/93/BetterFoliage-2.6.5%252B368b50a-Fabric-1.16.5.jar")
   })
 
+  test('Normal Jar w/ encoded problamatic chars should be correct', async () => {
+    //curse.maven:embeddium-908741:4862491
+    const res = await requestWithSupertest.get(downloadUrl('embeddium', '908741', '4862491', '.jar'))
+    expect(res.status).toStrictEqual(302)
+    expect(res.headers['location']).toStrictEqual("/download-binary/4862/491/embeddium-0.2.9%252bmc1.20.1.jar")
+  })
+
   test("Normal Jar that doesn't exist should return 404", async () => {
     //curse.maven:invalid-12345:12345
     const res = await requestWithSupertest.get(downloadUrl('invalid', '12345', '54321', '.jar'))

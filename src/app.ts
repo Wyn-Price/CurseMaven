@@ -27,6 +27,6 @@ app.get(`${urlBase}.*`, verifyParams, direct)
 
 app.get("/test/:id/:fileIds/:classifier?", testing)
 app.get('/source', (_, res) => res.redirect("https://github.com/Wyn-Price/CurseMaven/"));
-app.get("/download-binary/*", proxy("https://media.forgecdn.net", { proxyReqPathResolver: req => `/files/${req.params[0]}` }));
+app.get("/download-binary/*", proxy("https://mediafilez.forgecdn.net", { proxyReqPathResolver: req => `/files/${req.params[0]}` }));
 
 export default app

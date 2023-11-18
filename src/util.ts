@@ -39,7 +39,11 @@ export const getRedirectUrl = (url: string) => {
 
   // If there are problematic chars then redirect internally.
   if (rawFileName.includes("+")) {
-    return `/download-binary/${split[4]}/${split[5]}/${encodeURIComponent(fileName)}` //We have to encode it twice for this to work with gradle
+    //We have to encode it twice for this to work with gradle
+    return `/download-binary/${split[4]}/${split[5]}/${encodeURIComponent(fileName)}`
+  } else if (rawFileName.toLowerCase().includes("%2b")) {
+    // It seems like sometimes, curseforge returns the %2b instead of the +, which we need to account for
+    return `/download-binary/${split[4]}/${split[5]}/${fileName}`
   } else {
     return split.join('/') + '/' + fileName
   }
