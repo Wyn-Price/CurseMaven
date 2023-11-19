@@ -1,7 +1,7 @@
 import escapeHTML from 'escape-html';
 import { RequestHandler } from 'express';
 import createClassifierMap from './classifiermap';
-import { authFetch, getDownloadUrl, getFetchedData, getRedirectUrl } from './util';
+import { authFetch, getDownloadUrl, getFetchedData } from './util';
 
 
 const testing: RequestHandler = async (req, res) => {
@@ -80,9 +80,6 @@ const fetchUrlTest = async (id: string, fileId: string, output: string[], prefix
 
     const fileUrl = await getFetchedData(fetched)
     output.push(`${prefix}Found: ${fileUrl}`)
-
-    const redirectUrl = await getRedirectUrl(fileUrl)
-    output.push(`${prefix}Redirected to ${redirectUrl}`)
   } catch (e) {
     output.push("\n\n")
     output.push("---------- ERROR ----------")
