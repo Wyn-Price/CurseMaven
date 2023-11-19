@@ -4,10 +4,6 @@ import normaljar from "./normaljar";
 import pom from "./pom";
 import testing from "./testing";
 import verifyParams from "./verifyparams";
-import { pipeline } from "stream/promises";
-import { Readable } from "stream";
-import proxy from "express-http-proxy";
-import path from "path";
 
 const app = express();
 
@@ -27,6 +23,5 @@ app.get(`${urlBase}.*`, verifyParams, direct)
 
 app.get("/test/:id/:fileIds/:classifier?", testing)
 app.get('/source', (_, res) => res.redirect("https://github.com/Wyn-Price/CurseMaven/"));
-app.get("/download-binary/*", proxy("https://mediafilez.forgecdn.net", { proxyReqPathResolver: req => `/files/${req.params[0]}` }));
 
 export default app
