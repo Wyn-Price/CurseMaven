@@ -16,6 +16,8 @@ export default {
         }
 
         const time = Date.now()
+        // We want to follow the redirects, as gradle can do a pretty
+        // bad job at following links
         const response = await fetch(request, { redirect: 'follow' })
         const duration = Date.now() - time
 

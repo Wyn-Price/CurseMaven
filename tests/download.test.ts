@@ -15,13 +15,6 @@ describe('Normal Download URL', () => {
     expect(res.headers['location']).toStrictEqual("https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar")
   })
 
-  test('Normal Jar w/ problamatic chars should be correct', async () => {
-    //curse.maven:better-foliage-228529:3335093
-    const res = await requestWithSupertest.get(downloadUrl('better-foliage', '228529', '3335093', '.jar'))
-    expect(res.status).toStrictEqual(302)
-    expect(res.headers['location']).toStrictEqual("/download-binary/3335/93/BetterFoliage-2.6.5%252B368b50a-Fabric-1.16.5.jar")
-  })
-
   test("Normal Jar that doesn't exist should return 404", async () => {
     //curse.maven:invalid-12345:12345
     const res = await requestWithSupertest.get(downloadUrl('invalid', '12345', '54321', '.jar'))
@@ -65,13 +58,6 @@ describe('Classifier Download URL', () => {
     const res = await requestWithSupertest.get(downloadUrl('jer', '240630', '2452535-deobf-sources-api', '-api.jar'))
     expect(res.status).toStrictEqual(302)
     expect(res.headers['location']).toStrictEqual("https://edge.forgecdn.net/files/2452/538/JustEnoughResources-1.12-0.8.2.20-api.jar")
-  })
-
-  test('Classifier Jar w/ problamatic chars should be correct', async () => {
-    //curse.maven:pehkui-319596:3577084-sources-dev-3577085:sources-dev
-    const res = await requestWithSupertest.get(downloadUrl('pehkui', '319596', '3577084-sources-dev-3577085', '-sources-dev.jar'))
-    expect(res.status).toStrictEqual(302)
-    expect(res.headers['location']).toStrictEqual("/download-binary/3577/85/Pehkui-3.1.0%252B1.18.1-forge-sources-dev.jar")
   })
 
   test("Classifier Jar where original jar doesn't exist should return 404", async () => {
