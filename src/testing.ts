@@ -1,7 +1,7 @@
 import escapeHTML from 'escape-html';
 import { RequestHandler } from 'express';
 import createClassifierMap from './classifiermap';
-import { authFetch, getDownloadUrl, getFetchedData, getRedirectUrl } from './util';
+import { authFetch, getDownloadUrl, getFetchedData } from './util';
 
 
 const testing: RequestHandler = async (req, res) => {
