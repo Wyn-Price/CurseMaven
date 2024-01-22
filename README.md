@@ -3,6 +3,8 @@
 
 A more robust alternative to the normal curseforge maven, that takes in the project id and file id, rather than getting the artifacts from the jar name.
 
+See https://cursemaven.com/ for an up-to-date Readme.
+
 # Adding the Maven
 Add `https://cursemaven.com/` as a maven repository, like normal.
 ```gradle
@@ -61,3 +63,6 @@ Would point [here](https://www.curseforge.com/minecraft/mc-mods/ctm/files/264237
 
 # Testing
 To test cursemaven, get the project id and file id (and optional classifier), and navigate to `https://www.cursemaven.com/test/<ProjectId>/<FileId>/<Classifier?>`
+
+# Old version
+https://github.com/Wyn-Price/CurseMaven-Old
