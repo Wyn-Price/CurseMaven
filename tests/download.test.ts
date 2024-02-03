@@ -79,6 +79,12 @@ describe('POM Generation', () => {
       <groupId>curse.maven</groupId>
       <artifactId>waystones-245755</artifactId>
       <version>4946115</version>
+      <repositories>
+        <repository>
+          <id>curse-maven</id>
+          <url>https://cursemaven.com</url>
+        </repository>
+      </repositories>
       <dependencies><dependency>
                 <groupId>curse.maven</groupId>
                 <artifactId>531761</artifactId>

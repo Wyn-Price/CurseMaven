@@ -52,6 +52,12 @@ const pom: RequestHandler = async (req, res) => {
       <groupId>curse.maven</groupId>
       <artifactId>${descriptor}</artifactId>
       <version>${fileIds}</version>
+      <repositories>
+        <repository>
+          <id>curse-maven</id>
+          <url>https://cursemaven.com</url>
+        </repository>
+      </repositories>
       <dependencies>${dependenciesString}</dependencies>
     </project>`
     )
