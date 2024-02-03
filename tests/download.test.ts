@@ -69,16 +69,21 @@ describe('Classifier Download URL', () => {
 
 describe('POM Generation', () => {
   test('POM should be generated correctly', async () => {
-    //curse.maven:jei-238222:2724420 - POM
-    const res = await requestWithSupertest.get(downloadUrl('jei', '238222', '2724420', '.pom'))
+    //curse.maven:waystones-245755:4946115 - POM
+    const res = await requestWithSupertest.get(downloadUrl('waystones', '245755', '4946115', '.pom'))
     expect(res.status).toStrictEqual(200)
     expect(res.text).toStrictEqual(`<?xml version="1.0" encoding="UTF-8"?>
     <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <modelVersion>4.0.0</modelVersion>
       <groupId>curse.maven</groupId>
-      <artifactId>jei-238222</artifactId>
-      <version>2724420</version>
+      <artifactId>waystones-245755</artifactId>
+      <version>4946115</version>
+      <dependencies><dependency>
+                <groupId>curse.maven</groupId>
+                <artifactId>531761</artifactId>
+                <version>balm-3474695</version>
+            </dependency></dependencies>
     </project>`)
   })
 })
