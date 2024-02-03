@@ -15,7 +15,7 @@ export interface ModMetadata {
     logo: ModLogo;
     screenshots: ModScreenshot[];
     mainFileId: number;
-    latestFiles: ModLatestFile[];
+    latestFiles: ModFileMetadata[];
     latestFilesIndexes: ModLatestFilesIndex[];
     latestEarlyAccessFilesIndexes: ModLatestFilesIndex[];
     dateCreated: string;
@@ -73,58 +73,6 @@ export interface ModScreenshot {
     url: string;
 }
 
-export interface ModLatestFile {
-    id: number;
-    gameId: number;
-    modId: number;
-    isAvailable: boolean;
-    displayName: string;
-    fileName: string;
-    releaseType: number;
-    fileStatus: number;
-    hashes: ModHash[];
-    fileDate: string;
-    fileLength: number;
-    downloadCount: number;
-    fileSizeOnDisk: number;
-    downloadUrl: string;
-    gameVersions: string[];
-    sortableGameVersions: ModSortableGameVersion[];
-    dependencies: ModDependency[];
-    exposeAsAlternative: boolean;
-    parentProjectFileId: number;
-    alternateFileId: number;
-    isServerPack: boolean;
-    serverPackFileId: number;
-    isEarlyAccessContent: boolean;
-    earlyAccessEndDate: string;
-    fileFingerprint: number;
-    modules: ModModule[];
-}
-
-export interface ModHash {
-    value: string;
-    algo: number;
-}
-
-export interface ModSortableGameVersion {
-    gameVersionName: string;
-    gameVersionPadded: string;
-    gameVersion: string;
-    gameVersionReleaseDate: string;
-    gameVersionTypeId: number;
-}
-
-export interface ModDependency {
-    modId: number;
-    relationType: number;
-}
-
-export interface ModModule {
-    name: string;
-    fingerprint: number;
-}
-
 export interface ModLatestFilesIndex {
     gameVersion: string;
     fileId: number;
@@ -169,6 +117,12 @@ export interface ModFileMetadata {
 export interface ModFileHash {
     value: string;
     algo: number;
+}
+
+
+export const AlgoType = {
+    SHA1: 1,
+    MD5: 2
 }
 
 export interface ModFileSortableGameVersion {

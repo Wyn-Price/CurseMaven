@@ -2,20 +2,15 @@ import {RequestHandler} from "express";
 import {CurseForgeError, fetchAllModFiles, fetchModMetadata, wasErroneous} from "./util";
 import {ModFileDependency, ModFileDependencyType, ModFileMetadata, ModMetadata} from "./modmetadata";
 
-const pom: RequestHandler = async (req, res) => {
-    const {descriptor, fileIds} = req.params
-    const {id} = res.locals
-
+export const generatePom =async  (id: any, fileIds: string, descriptor: string) : Promise<string | CurseForgeError> => {
     const metadata = await fetchModMetadata(id)
     if (wasErroneous(metadata)) {
-        res.status(404)
-        return res.send(metadata.message)
+        return metadata
     }
 
     const modFiles = await fetchAllModFiles(id)
     if (wasErroneous(modFiles)) {
-        res.status(404)
-        return res.send(modFiles.message)
+        return modFiles
     }
 
     const file = modFiles.find((it) => it.id === parseInt(fileIds, 10))
@@ -30,8 +25,7 @@ const pom: RequestHandler = async (req, res) => {
     const dependencyStringsOrError = await Promise.all(dependencies);
     for (const e of dependencyStringsOrError) {
         if (wasErroneous(e)) {
-            res.status(404)
-            return res.send(e.message)
+            return e
         }
     }
     const dependenciesString = dependencyStringsOrError
@@ -44,7 +38,7 @@ const pom: RequestHandler = async (req, res) => {
             </dependency>`
         }).join("\n")
 
-    return res.send(
+    return (
         `<?xml version="1.0" encoding="UTF-8"?>
     <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -61,6 +55,18 @@ const pom: RequestHandler = async (req, res) => {
       <dependencies>${dependenciesString}</dependencies>
     </project>`
     )
+}
+
+const pom: RequestHandler = async (req, res) => {
+    const {descriptor, fileIds} = req.params
+    const {id} = res.locals
+
+    const pom = await generatePom(id, fileIds, descriptor);
+    if (wasErroneous(pom)) {
+        res.status(pom.status)
+        return res.send(pom.message)
+    }
+    return res.send(pom)
 }
 
 const filePublicationMillis = (file: ModFileMetadata) => new Date(file.fileDate).getTime()
