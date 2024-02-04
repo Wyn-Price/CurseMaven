@@ -52,3 +52,14 @@ export const fetchModMetadata = async (modId: string): Promise<ModMetadata | Cur
     if (!response.ok) return {message: `Error loading mod metadata from curse forge. The status was: ${response.status}, the message was: '${response.statusText}'.`, status: response.status}
     return (await response.json()).data
 }
+
+export const isLatinLetter = (c: string) => c.toUpperCase() === c.toLowerCase()
+
+export const partition = <T>(arr: T[], fn: (t: T) => boolean) : T[][] =>
+    arr.reduce(
+        (acc, val, i, arr) => {
+            acc[fn(val) ? 0 : 1].push(val);
+            return acc;
+        },
+        [[], []] as T[][]
+    );
