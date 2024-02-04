@@ -33,8 +33,8 @@ export const generatePom =async  (id: any, fileIds: string, descriptor: string) 
         .map((it) => {
             return `<dependency>
                 <groupId>curse.maven</groupId>
-                <artifactId>${it.mod.id}</artifactId>
-                <version>${it.mod.slug}-${it.file.id}</version>
+                <artifactId>${it.mod.slug}-${it.mod.id}</artifactId>
+                <version>${it.file.id}</version>
             </dependency>`
         }).join("\n")
 
@@ -97,7 +97,7 @@ const resolveDependencyFile = async (
                 .filter((file) => file.isAvailable)
                 .filter((file) => filePublicationMillis(file) <= publicationMillis)
                 .sort((f, s) => filePublicationMillis(f) - filePublicationMillis(s))
-                .find((file) => file.gameId === gameId /*&& hasIntersections(file.gameVersions, gameVersions) */)
+                .find((file) => file.gameId === gameId && hasIntersections(file.gameVersions, gameVersions))
             ?? modFiles.find((file) => modMetadata.mainFileId === file.id)
     }
 }
