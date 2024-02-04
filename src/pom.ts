@@ -1,8 +1,8 @@
 import {RequestHandler} from "express";
-import {CurseForgeError, fetchAllModFiles, fetchModMetadata, wasErroneous} from "./util";
+import {CurseForgeError, fetchAllModFiles, fetchModMetadata, isLatinLetter, partition, wasErroneous} from "./util";
 import {ModFileDependency, ModFileDependencyType, ModFileMetadata, ModMetadata} from "./modmetadata";
 
-export const generatePom =async  (id: any, fileIds: string, descriptor: string) : Promise<string | CurseForgeError> => {
+export const generatePom = async (id: any, fileIds: string, descriptor: string): Promise<string | CurseForgeError> => {
     const metadata = await fetchModMetadata(id)
     if (wasErroneous(metadata)) {
         return metadata
@@ -85,8 +85,10 @@ const resolveDependencyFile = async (
     id: string,
     publicationMillis: number,
     gameId: number,
-    gameVersions: string[],
+    environment: string[],
 ): Promise<ResolvedModDependency | CurseForgeError> => {
+    const [gameVersions, modLoaders] = partition(environment, (t) => isLatinLetter(t.charAt(0)))
+
     const modFiles = await fetchAllModFiles(id)
     if (wasErroneous(modFiles)) return modFiles
     const modMetadata = await fetchModMetadata(id);
@@ -96,8 +98,14 @@ const resolveDependencyFile = async (
         file: modFiles
                 .filter((file) => file.isAvailable)
                 .filter((file) => filePublicationMillis(file) <= publicationMillis)
-                .sort((f, s) => filePublicationMillis(f) - filePublicationMillis(s))
-                .find((file) => file.gameId === gameId && hasIntersections(file.gameVersions, gameVersions))
+                .sort((f, s) => filePublicationMillis(s) - filePublicationMillis(f))
+                .find((file) => {
+                        const [fileGameVersions, fileModLoaders] = partition(file.gameVersions, (t) => isLatinLetter(t.charAt(0)))
+                        return file.gameId === gameId &&
+                            hasIntersections(modLoaders, fileModLoaders) &&
+                            hasIntersections(gameVersions, fileGameVersions)
+                    }
+                )
             ?? modFiles.find((file) => modMetadata.mainFileId === file.id)
     }
 }
