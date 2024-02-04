@@ -2,7 +2,7 @@ import {ModFileMetadata, ModFileResponse, ModMetadata} from "./modmetadata";
 
 export const authFetch = (url: string) => fetch(url, {
     headers: {
-        'x-api-key': process.env.API_KEY ?? ""
+        'x-api-key': "$2a$10$Y0cxs1w9utgz7AAN4pqO/eydKW6tgNgPXN4GPhG7CNumL21/Xlh.." // process.env.API_KEY ?? ""
     }
 })
 

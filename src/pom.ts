@@ -1,19 +1,25 @@
 import {RequestHandler} from "express";
-import {CurseForgeError, fetchAllModFiles, fetchModMetadata, isLatinLetter, partition, wasErroneous} from "./util";
+import {
+    CurseForgeError,
+    fetchAllModFiles,
+    fetchModFile,
+    fetchModMetadata,
+    isLatinLetter,
+    partition,
+    wasErroneous
+} from "./util";
 import {ModFileDependency, ModFileDependencyType, ModFileMetadata, ModMetadata} from "./modmetadata";
 
-export const generatePom = async (id: any, fileIds: string, descriptor: string): Promise<string | CurseForgeError> => {
+export const generatePom = async (id: any, fileId: string, descriptor: string): Promise<string | CurseForgeError> => {
     const metadata = await fetchModMetadata(id)
     if (wasErroneous(metadata)) {
         return metadata
     }
 
-    const modFiles = await fetchAllModFiles(id)
-    if (wasErroneous(modFiles)) {
-        return modFiles
+    const file = await fetchModFile(id, fileId)
+    if (wasErroneous(file)) {
+        return file
     }
-
-    const file = modFiles.find((it) => it.id === parseInt(fileIds, 10))
     const publicationMillis = filePublicationMillis(file);
     const dependencies = file.dependencies
         .filter((it: ModFileDependency) =>
@@ -45,7 +51,7 @@ export const generatePom = async (id: any, fileIds: string, descriptor: string):
       <modelVersion>4.0.0</modelVersion>
       <groupId>curse.maven</groupId>
       <artifactId>${descriptor}</artifactId>
-      <version>${fileIds}</version>
+      <version>${fileId}</version>
       <repositories>
         <repository>
           <id>curse-maven</id>
