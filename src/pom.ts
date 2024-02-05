@@ -20,11 +20,11 @@ export const generatePom = async (id: any, fileId: string, descriptor: string): 
     if (fileResponse.success === false) return fileResponse
     const publicationMillis = filePublicationMillis(fileResponse.data);
     const dependencies = fileResponse.data.dependencies
-        .filter((it: ModFileDependency) =>
+        .filter((it) =>
             it.relationType === ModFileDependencyType.RequiredDependency ||
             it.relationType === ModFileDependencyType.Include ||
             it.relationType === ModFileDependencyType.Tool)
-        .map(async (dep: ModFileDependency) => await resolveDependencyFile(dep.modId + "", publicationMillis, fileResponse.data.gameId, fileResponse.data.gameVersions))
+        .map((dep) => resolveDependencyFile(String(dep.modId), publicationMillis, fileResponse.data.gameId, fileResponse.data.gameVersions))
 
     const dependencyStringsOrError = await Promise.all(dependencies);
     for (const e of dependencyStringsOrError) {
