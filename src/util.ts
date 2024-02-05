@@ -1,8 +1,6 @@
-import {ModFileMetadata, ModFileResponse, ModMetadata} from "./modmetadata";
-
 export const authFetch = (url: string) => fetch(url, {
     headers: {
-        'x-api-key': "$2a$10$Y0cxs1w9utgz7AAN4pqO/eydKW6tgNgPXN4GPhG7CNumL21/Xlh.." // process.env.API_KEY ?? ""
+        'x-api-key': process.env.API_KEY ?? ""
     }
 })
 
@@ -14,52 +12,18 @@ export const getFetchedData = async (response: Response) => {
     return json.data
 }
 
-export interface CurseForgeError {
-    message: string,
-    status: number,
-}
-
-export const wasErroneous = (value: any | CurseForgeError): value is CurseForgeError => typeof value === "object" && "message" in value
-
-export const fetchModFile = async (modId: string, fileId: string): Promise<ModFileMetadata | CurseForgeError> => {
-    const response = (await authFetch(`https://api.curseforge.com/v1/mods/${modId}/files/${fileId}`))
-    if (!response.ok) return {message: `Error loading mod file from curse forge. The status was: ${response.status}, the message was: '${response.statusText}'.`, status: response.status}
-    return (await response.json()).data
-}
-
-export const fetchAllModFiles = async (modId: string): Promise<ModFileMetadata[] | CurseForgeError> => {
-    let fileMetadata: ModFileMetadata[] = []
-    let totalFiles = 1
-    let index = 0
-    while (index < totalFiles) {
-        const fetch = (await authFetch(`https://api.curseforge.com/v1/mods/${modId}/files?index=${index}`))
-
-        if (!fetch.ok) {
-            return {message: `Failed to fetch file information for mod: '${modId}' from curse forge.`, status: fetch.status}
-        }
-
-        const response: ModFileResponse = await fetch.json()
-        totalFiles = response.pagination.totalCount
-        index += response.pagination.resultCount
-        fileMetadata = [...fileMetadata, ...response.data]
-    }
-    return fileMetadata
-}
-
-
-export const fetchModMetadata = async (modId: string): Promise<ModMetadata | CurseForgeError> =>{
-    const response = (await authFetch(`https://api.curseforge.com/v1/mods/${modId}`))
-    if (!response.ok) return {message: `Error loading mod metadata from curse forge. The status was: ${response.status}, the message was: '${response.statusText}'.`, status: response.status}
-    return (await response.json()).data
-}
-
 export const isLatinLetter = (c: string) => c.toUpperCase() === c.toLowerCase()
 
-export const partition = <T>(arr: T[], fn: (t: T) => boolean) : T[][] =>
-    arr.reduce(
-        (acc, val, i, arr) => {
-            acc[fn(val) ? 0 : 1].push(val);
-            return acc;
-        },
-        [[], []] as T[][]
-    );
+export const partition = <T>(arr: T[], fn: (t: T) => boolean) : T[][] => {
+    const a: T[] = []
+    const b: T[] = []
+
+    arr.forEach((t) =>{
+        if (fn(t)) {
+            a.push(t)
+        } else {
+            b.push(t)
+        }
+    })
+    return [a, b]
+}

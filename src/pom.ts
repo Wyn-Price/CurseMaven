@@ -1,41 +1,39 @@
 import {RequestHandler} from "express";
 import {
-    CurseForgeError,
+    isLatinLetter,
+    partition,
+} from "./util";
+import {ModFileDependency, ModFileDependencyType, ModFileMetadata, ModMetadata} from "./cfapi/cfmetadata";
+import {
+    CurseForgeResponse,
     fetchAllModFiles,
     fetchModFile,
     fetchModMetadata,
-    isLatinLetter,
-    partition,
-    wasErroneous
-} from "./util";
-import {ModFileDependency, ModFileDependencyType, ModFileMetadata, ModMetadata} from "./modmetadata";
+    SuccessfulCurseForgeResponse
+} from "./cfapi/cffetch";
 
-export const generatePom = async (id: any, fileId: string, descriptor: string): Promise<string | CurseForgeError> => {
-    const metadata = await fetchModMetadata(id)
-    if (wasErroneous(metadata)) {
-        return metadata
-    }
+export const generatePom = async (id: any, fileId: string, descriptor: string): Promise<CurseForgeResponse<string>> => {
+    const metadataResponse = await fetchModMetadata(id)
+    if (metadataResponse.success === false) return metadataResponse
 
-    const file = await fetchModFile(id, fileId)
-    if (wasErroneous(file)) {
-        return file
-    }
-    const publicationMillis = filePublicationMillis(file);
-    const dependencies = file.dependencies
+    const fileResponse = await fetchModFile(id, fileId)
+    if (fileResponse.success === false) return fileResponse
+    const publicationMillis = filePublicationMillis(fileResponse.data);
+    const dependencies = fileResponse.data.dependencies
         .filter((it: ModFileDependency) =>
             it.relationType === ModFileDependencyType.RequiredDependency ||
             it.relationType === ModFileDependencyType.Include ||
             it.relationType === ModFileDependencyType.Tool)
-        .map(async (dep: ModFileDependency) => await resolveDependencyFile(dep.modId + "", publicationMillis, file.gameId, file.gameVersions))
+        .map(async (dep: ModFileDependency) => await resolveDependencyFile(dep.modId + "", publicationMillis, fileResponse.data.gameId, fileResponse.data.gameVersions))
 
     const dependencyStringsOrError = await Promise.all(dependencies);
     for (const e of dependencyStringsOrError) {
-        if (wasErroneous(e)) {
+        if (e.success === false) {
             return e
         }
     }
     const dependenciesString = dependencyStringsOrError
-        .map((it) => it as ResolvedModDependency)
+        .map((it) => (it as SuccessfulCurseForgeResponse<ResolvedModDependency>).data)
         .map((it) => {
             return `<dependency>
                 <groupId>curse.maven</groupId>
@@ -44,8 +42,10 @@ export const generatePom = async (id: any, fileId: string, descriptor: string): 
             </dependency>`
         }).join("\n")
 
-    return (
-        `<?xml version="1.0" encoding="UTF-8"?>
+    return {
+        success: true,
+        data: (
+            `<?xml version="1.0" encoding="UTF-8"?>
     <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <modelVersion>4.0.0</modelVersion>
@@ -60,59 +60,101 @@ export const generatePom = async (id: any, fileId: string, descriptor: string): 
       </repositories>
       <dependencies>${dependenciesString}</dependencies>
     </project>`
-    )
+        )
+    }
 }
 
 const pom: RequestHandler = async (req, res) => {
     const {descriptor, fileIds} = req.params
     const {id} = res.locals
 
-    const pom = await generatePom(id, fileIds, descriptor);
-    if (wasErroneous(pom)) {
-        res.status(pom.status)
-        return res.send(pom.message)
+    const pomResponse = await generatePom(id, fileIds, descriptor);
+    if (pomResponse.success === false) {
+        res.status(pomResponse.status)
+        return res.send(pomResponse.message)
     }
-    return res.send(pom)
+    return res.send(pomResponse.data)
 }
 
 const filePublicationMillis = (file: ModFileMetadata) => new Date(file.fileDate).getTime()
 
-const hasIntersections = (a: string[], b: string[]): boolean => a.filter((e) => b.includes(e)).length !== 0
+const hasIntersections = (a: string[], b: string[]): boolean => a.some((e) => b.includes(e))
 
-interface ResolvedModDependency {
+type ResolvedModDependency = {
     mod: ModMetadata,
     file: ModFileMetadata
 }
 
-// Take the ID of the dependency, and the publicationTime, gameId, and gameVersion from the parent mod.
-// We then look for the most recent date before the parent dependency was published and make sure the
-// gameIds and gameVersions match up right.
+// Resolution Process:
+// Step 1: Fetch and filter all files of the given mod that are:
+//    - 3rd party available
+//    - Published before the publication date of the calling mod
+//    - Sort them in order from oldest to latest
+// Step 2: Find the most recent file from step 1 that is of the same
+//         Game and is for a compatible environment (same mod loaders/version)
+// Step 3: If step 2 failed, return the most recent file from step 1
+// Step 4: If step 3 failed, return the mainFile from the mod metadata
+// Step 5: If step 4 failed, return an error.
 const resolveDependencyFile = async (
     id: string,
     publicationMillis: number,
     gameId: number,
     environment: string[],
-): Promise<ResolvedModDependency | CurseForgeError> => {
-    const [gameVersions, modLoaders] = partition(environment, (t) => isLatinLetter(t.charAt(0)))
+): Promise<CurseForgeResponse<ResolvedModDependency>> => {
+    // The parameters 'environment' is really just a list of modloader ID's and
+    // Minecraft versions. ModLoaders will probably always start with a letter, and
+    // Minecraft versions will start with numbers (like 15w15a, or 1.20.1, etc.)
+    // To separate them we split the list into 2 based on if its starts with a latin
+    // alphabetical letter or not.
+    const [modLoaders, gameVersions] = partition(environment, (t) => isLatinLetter(t.charAt(0)))
 
-    const modFiles = await fetchAllModFiles(id)
-    if (wasErroneous(modFiles)) return modFiles
-    const modMetadata = await fetchModMetadata(id);
-    if (wasErroneous(modMetadata)) return modMetadata
+    const modFilesResponse = await fetchAllModFiles(id)
+    if (modFilesResponse.success === false) return modFilesResponse
+    const modMetadataResponse = await fetchModMetadata(id);
+    if (modMetadataResponse.success === false) return modMetadataResponse
+
+    let returnFile: ModFileMetadata
+
+    // ----- STEP 1 -----
+    const recentApplicableFiles = modFilesResponse.data
+        .filter((file) => file.isAvailable)
+        .filter((file) => filePublicationMillis(file) <= publicationMillis)
+        .sort((f, s) => filePublicationMillis(s) - filePublicationMillis(f))
+
+    // ----- STEP 2 -----
+    returnFile = recentApplicableFiles.find((file) => {
+            const [fileModLoaders, fileGameVersions] = partition(file.gameVersions, (t) => isLatinLetter(t.charAt(0)))
+            return file.gameId === gameId &&
+                hasIntersections(modLoaders, fileModLoaders) &&
+                hasIntersections(gameVersions, fileGameVersions)
+        }
+    )
+
+    // ----- STEP 3 -----
+    if (!returnFile) {
+        returnFile = recentApplicableFiles[0]
+    }
+
+    // ----- STEP 4 -----
+    if (!returnFile) {
+        returnFile = modFilesResponse.data.find((file) => modMetadataResponse.data.mainFileId === file.id)
+    }
+
+    // ----- STEP 5 (sanity check) -----
+    if (!returnFile) {
+        return {
+            success: false,
+            message: `Failed to find an appropriate file dependency for project: '${id}'`,
+            status: 500
+        }
+    }
+
     return {
-        mod: modMetadata,
-        file: modFiles
-                .filter((file) => file.isAvailable)
-                .filter((file) => filePublicationMillis(file) <= publicationMillis)
-                .sort((f, s) => filePublicationMillis(s) - filePublicationMillis(f))
-                .find((file) => {
-                        const [fileGameVersions, fileModLoaders] = partition(file.gameVersions, (t) => isLatinLetter(t.charAt(0)))
-                        return file.gameId === gameId &&
-                            hasIntersections(modLoaders, fileModLoaders) &&
-                            hasIntersections(gameVersions, fileGameVersions)
-                    }
-                )
-            ?? modFiles.find((file) => modMetadata.mainFileId === file.id)
+        success: true,
+        data: {
+            mod: modMetadataResponse.data,
+            file: returnFile
+        }
     }
 }
 

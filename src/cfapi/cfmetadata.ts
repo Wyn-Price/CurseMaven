@@ -1,4 +1,4 @@
-export interface ModMetadata {
+export type ModMetadata = {
     id: number;
     gameId: number;
     name: string;
@@ -28,14 +28,14 @@ export interface ModMetadata {
     rating: number;
 }
 
-export interface ModLinks {
+export type ModLinks = {
     websiteUrl: string;
     wikiUrl: string;
     issuesUrl: string;
     sourceUrl: string;
 }
 
-export interface ModCategory {
+export type ModCategory = {
     id: number;
     gameId: number;
     name: string;
@@ -49,13 +49,13 @@ export interface ModCategory {
     displayIndex: number;
 }
 
-export interface ModAuthor {
+export type ModAuthor = {
     id: number;
     name: string;
     url: string;
 }
 
-export interface ModLogo {
+export type ModLogo = {
     id: number;
     modId: number;
     title: string;
@@ -64,7 +64,7 @@ export interface ModLogo {
     url: string;
 }
 
-export interface ModScreenshot {
+export type ModScreenshot = {
     id: number;
     modId: number;
     title: string;
@@ -73,7 +73,7 @@ export interface ModScreenshot {
     url: string;
 }
 
-export interface ModLatestFilesIndex {
+export type ModLatestFilesIndex = {
     gameVersion: string;
     fileId: number;
     filename: string;
@@ -85,7 +85,7 @@ export interface ModLatestFilesIndex {
 /// -----------------------------------
 
 
-export interface ModFileMetadata {
+export type ModFileMetadata = {
     id: number;
     gameId: number;
     modId: number;
@@ -114,7 +114,7 @@ export interface ModFileMetadata {
     modules: ModFileModule[];
 }
 
-export interface ModFileHash {
+export type ModFileHash = {
     value: string;
     algo: number;
 }
@@ -125,7 +125,7 @@ export const AlgoType = {
     MD5: 2
 }
 
-export interface ModFileSortableGameVersion {
+export type ModFileSortableGameVersion = {
     gameVersionName: string;
     gameVersionPadded: string;
     gameVersion: string;
@@ -133,23 +133,23 @@ export interface ModFileSortableGameVersion {
     gameVersionTypeId: number;
 }
 
-export interface ModFileDependency {
+export type ModFileDependency = {
     modId: number;
     relationType: number;
 }
 
 
-export interface ModFileModule {
+export type ModFileModule = {
     name: string;
     fingerprint: number;
 }
 
-export interface ModFileResponse {
+export type ModFileResponse = {
     data: ModFileMetadata[];
     pagination: ModFileListPagination;
 }
 
-export interface ModFileListPagination {
+export type ModFileListPagination = {
     index: number;
     pageSize: number;
     resultCount: number;

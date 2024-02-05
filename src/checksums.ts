@@ -1,19 +1,19 @@
 import {RequestHandler} from "express";
 import {createHash} from 'crypto';
 import pom, {generatePom} from "./pom";
-import {fetchModFile, wasErroneous} from "./util";
-import {AlgoType} from "./modmetadata";
+import {AlgoType} from "./cfapi/cfmetadata";
+import {fetchModFile} from "./cfapi/cffetch";
 
 export const pomHash: RequestHandler = async (req, res) => {
     const {descriptor, algorithm} = req.params
     const {id, file} = res.locals
-    const pom = await generatePom(id, file, descriptor)
-    if (wasErroneous(pom)) {
-        res.status(pom.status)
-        return res.send(pom.message)
+    const pomResponse = await generatePom(id, file, descriptor)
+    if (pomResponse.success === false) {
+        res.status(pomResponse.status)
+        return res.send(pomResponse.message)
     }
     const hash = createHash(algorithm).update(
-        pom
+        pomResponse.data
     ).digest('hex')
     return res.send(hash)
 }
@@ -33,10 +33,10 @@ export const jarHash: RequestHandler = async (req, res) => {
     const {algorithm} = req.params
     const {id, file} = res.locals
 
-    const fileMetadata = await fetchModFile(id, file)
-    if (wasErroneous(fileMetadata)) {
-        res.status(fileMetadata.status)
-        return res.send(fileMetadata.message)
+    const fileMetadataResponse = await fetchModFile(id, file)
+    if (fileMetadataResponse.success === false) {
+        res.status(fileMetadataResponse.status)
+        return res.send(fileMetadataResponse.message)
     }
 
     const algoNum = getAlgoNum(algorithm)
@@ -44,10 +44,11 @@ export const jarHash: RequestHandler = async (req, res) => {
         res.status(404)
         return res.send(`Unknown algorithm type: '${algorithm}', options are: 'sha1', or 'md5'.`)
     }
-    const hash = fileMetadata.hashes.find((it) => it.algo === algoNum)
+    const modFileHashes = fileMetadataResponse.data.hashes;
+    const hash = modFileHashes.find((it) => it.algo === algoNum)
     if (!hash) {
         res.status(404)
-        return res.send(`Unknown algorithm: ${algorithm}, options are: '${fileMetadata.hashes.map((it) => {
+        return res.send(`Unknown algorithm: ${algorithm}, options are: '${modFileHashes.map((it) => {
             return Object.keys(AlgoType)[it.algo - 1]
         }).join(', ')}'`)
     }

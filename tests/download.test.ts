@@ -61,7 +61,7 @@ describe('Classifier Download URL', () => {
   })
 
   test("Classifier Jar where original jar doesn't exist should return 404", async () => {
-    //curse.maven:invalid-12345:54321-sources-54322:sources
+    // curse.maven:invalid-12345:54321-sources-54322:sources
     const res = await requestWithSupertest.get(downloadUrl('invalid', '12345', '54321', '-sources.jar'))
     expect(res.status).toStrictEqual(404)
   })
@@ -69,7 +69,7 @@ describe('Classifier Download URL', () => {
 
 describe('POM Generation', () => {
   test('POM should be generated correctly', async () => {
-    //curse.maven:waystones-245755:4946115 - POM
+    // curse.maven:waystones-245755:4946115 - POM
     const res = await requestWithSupertest.get(downloadUrl('waystones', '245755', '4946115', '.pom'))
     expect(res.status).toStrictEqual(200)
     expect(res.text).toStrictEqual(`<?xml version="1.0" encoding="UTF-8"?>
@@ -87,8 +87,8 @@ describe('POM Generation', () => {
       </repositories>
       <dependencies><dependency>
                 <groupId>curse.maven</groupId>
-                <artifactId>531761</artifactId>
-                <version>balm-3474695</version>
+                <artifactId>balm-531761</artifactId>
+                <version>4939245</version>
             </dependency></dependencies>
     </project>`)
   })
