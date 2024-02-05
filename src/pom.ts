@@ -102,8 +102,8 @@ const resolveDependencyFile = async (
     environment: string[],
 ): Promise<CurseForgeResponse<ResolvedModDependency>> => {
     // The parameters 'environment' is really just a list of modloader ID's and
-    // Minecraft versions. ModLoaders will probably always start with a letter, and
-    // Minecraft versions will start with numbers (like 15w15a, or 1.20.1, etc.)
+    // minecraft versions. ModLoaders will probably always start with a letter, and
+    // minecraft versions will start with numbers (like 15w15a, or 1.20.1, etc.)
     // To separate them we split the list into 2 based on if its starts with a latin
     // alphabetical letter or not.
     const [modLoaders, gameVersions] = partition(environment, (t) => isLatinLetter(t.charAt(0)))
