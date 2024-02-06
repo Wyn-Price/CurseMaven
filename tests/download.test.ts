@@ -68,9 +68,11 @@ describe('Classifier Download URL', () => {
 })
 
 describe('POM Generation', () => {
-  test('POM should be generated correctly', async () => {
+  test('POM with dependencies should be generated correctly', async () => {
     // curse.maven:waystones-245755:4946115 - POM
-    const res = await requestWithSupertest.get(downloadUrl('waystones', '245755', '4946115', '.pom'))
+    const res = await requestWithSupertest
+        .get(downloadUrl('waystones', '245755', '4946115', '.pom'))
+        .set("CurseMaven-Pom-Include-Dep", "true")
     expect(res.status).toStrictEqual(200)
     expect(res.text).toStrictEqual(`<?xml version="1.0" encoding="UTF-8"?>
     <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
@@ -90,6 +92,20 @@ describe('POM Generation', () => {
                 <artifactId>balm-531761</artifactId>
                 <version>4939245</version>
             </dependency></dependencies>
+    </project>`)
+  })
+  test('POM without dependencies should be generated correctly', async () => {
+    // curse.maven:waystones-245755:4946115 - POM
+    const res = await requestWithSupertest
+        .get(downloadUrl('waystones', '245755', '4946115', '.pom'))
+    expect(res.status).toStrictEqual(200)
+    expect(res.text).toStrictEqual(`<?xml version="1.0" encoding="UTF-8"?>
+    <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>curse.maven</groupId>
+      <artifactId>waystones-245755</artifactId>
+      <version>4946115</version>
     </project>`)
   })
 })

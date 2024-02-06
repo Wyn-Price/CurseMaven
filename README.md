@@ -40,6 +40,12 @@ The Project ID can be found on the `About Project` section of the project
 To get the file ID, go to the download page of file you want to use, and the file ID will be in the URL.
 <img height="300px" src="https://www.cursemaven.com/fileid.png">
 
+## Including dependencies in the generated pom
+
+By setting the header: `CurseMaven-Pom-Include-Dep` to `true` you can request the generated pom to include
+information about the required dependencies of the given mod file. This will also include the repository: 
+`https://cursemaven.com` as a repository.
+
 # Examples
  - [Forge Example](https://www.cursemaven.com/forge)
  - [Fabric Example](https://www.cursemaven.com/fabric)

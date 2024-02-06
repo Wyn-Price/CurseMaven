@@ -104,6 +104,7 @@ dist
 .tern-port
 .vercel
 .idea
+.env*.local
 
 # JS build
 build.js

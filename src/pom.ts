@@ -12,7 +12,7 @@ import {
     SuccessfulCurseForgeResponse
 } from "./cfapi/cffetch";
 
-export const generatePom = async (id: any, fileId: string, descriptor: string): Promise<CurseForgeResponse<string>> => {
+const generatePomWithDependencies = async (id: any, fileId: string, descriptor: string): Promise<CurseForgeResponse<string>> => {
     const metadataResponse = await fetchModMetadata(id)
     if (metadataResponse.success === false) return metadataResponse
 
@@ -64,16 +64,33 @@ export const generatePom = async (id: any, fileId: string, descriptor: string): 
     }
 }
 
+const generateBasicPom = (fileId: string, descriptor: string): string => {
+    return `<?xml version="1.0" encoding="UTF-8"?>
+    <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>curse.maven</groupId>
+      <artifactId>${descriptor}</artifactId>
+      <version>${fileId}</version>
+    </project>`
+}
+
 const pom: RequestHandler = async (req, res) => {
     const {descriptor, fileIds} = req.params
     const {id} = res.locals
 
-    const pomResponse = await generatePom(id, fileIds, descriptor);
-    if (pomResponse.success === false) {
-        res.status(pomResponse.status)
-        return res.send(pomResponse.message)
+    let pom: string
+    if (req.header("CurseMaven-Pom-Include-Dep") === "true") {
+        const pomResponse = await generatePomWithDependencies(id, fileIds, descriptor);
+        if (pomResponse.success === false) {
+            res.status(pomResponse.status)
+            return res.send(pomResponse.message)
+        }
+        pom = pomResponse.data
+    } else {
+        pom = generateBasicPom(fileIds, descriptor)
     }
-    return res.send(pomResponse.data)
+    return res.send(pom)
 }
 
 const filePublicationMillis = (file: ModFileMetadata) => new Date(file.fileDate).getTime()
