@@ -21,7 +21,7 @@
   "dependencies": {
     "dotenv": "^14.2.0",
     "escape-html": "^1.0.3",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "node-fetch": "2",
     "promise.any": "^2.0.3"
   },
