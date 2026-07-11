@@ -1,6 +1,7 @@
 {
   "name": "cursemaven",
   "version": "5.1.0",
+  "packageManager": "yarn@4.5.0",
   "description": "A more robust alternative to the curseforge maven",
   "scripts": {
     "dev": "tsx watch src/index.ts",

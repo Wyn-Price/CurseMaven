@@ -111,3 +111,7 @@ build.js
 
 .wrangler/
 .cloudflare/
+
+.yarn
+
+.corepack
