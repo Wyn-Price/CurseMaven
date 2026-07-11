@@ -1,6 +1,8 @@
 import escapeHTML from 'escape-html';
 import { Request, RequestHandler } from 'express';
 import createClassifierMap from './classifiermap';
+import { getFirst } from './util';
+import emitStats, { STATS_HEADER } from '../stats';
 
 type SplitData = {
   fileIdsSplit: string[];
@@ -31,9 +33,12 @@ const verifyParams: RequestHandler = (req, res, next) => {
 }
 
 const verifyParamsOrThrow: RequestHandler = (req, res, next) => {
+  const start = performance.now();
   const gradleVersion = checkGradleVersion(req)
 
-  const { descriptor, fileIds, filename } = req.params
+  const descriptor = getFirst(req.params.descriptor);
+  const fileIds = getFirst(req.params.fileIds);
+  const filename = getFirst(req.params.filename);
   //Examples with curse.maven:example-jei-238222:2724420-sources-2724421:classifier -> /curse/maven/example-jei-238222/2724420/example-jei-238222-2724420-classifier.jar
   //    descriptor: 'example-jei-238222'
   //    fileIds: '2724420-sources-2724421'
@@ -64,14 +69,14 @@ const verifyParamsOrThrow: RequestHandler = (req, res, next) => {
   res.locals.name = descriptorParts.name
   res.locals.file = foundId
 
-  const params = new URLSearchParams({
-    project_id: encodeURIComponent(descriptorParts.id),
-    project_named: encodeURIComponent(descriptorParts.name),
-    file_id: encodeURIComponent(main),
-    classifier: encodeURIComponent(classifier),
-    gradle_version: encodeURIComponent(gradleVersion)
-  });
-  res.setHeader("X-CurseMaven-Stats", params.toString());
+  const statsData = {
+    project_id: descriptorParts.id,
+    project_named: descriptorParts.name,
+    file_id: main,
+    classifier: classifier,
+    gradle_version: gradleVersion,
+  };
+  res.setHeader(STATS_HEADER, JSON.stringify(statsData)); // Pass stats back to cloudflare worker
 
   next()
 }
@@ -135,7 +140,7 @@ const getNameAndIdFromDescriptor = (split: SplitData): DescriptorParts => {
 const createFilenameParts = (split: SplitData): FilenameParts => {
   const { descriptorSplit, fileIdsSplit, filenameSplit } = split
 
-  //My brother in christ please rewrite this code. 
+  //My brother in christ please rewrite this code.
   //Essentially, I'm using the previous URL artifacts to validate the URL, and get the classifier
   const name = filenameSplit.slice(0, descriptorSplit.length - 1).join("-")
   const id = filenameSplit[descriptorSplit.length - 1]

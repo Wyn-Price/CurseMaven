@@ -3,41 +3,16 @@ const hostRewrites: Record<string, string | undefined> = {
     "cfa2.cursemaven.com": "beta.cursemaven.com",
 }
 
-export default {
-    async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-        ctx.passThroughOnException()
+export const STATS_HEADER = "X-CurseMaven-Stats";
 
-        // Rewrite the host, if it's using the old URLs (www & cfa2)
-        const hostOverride = hostRewrites[new URL(request.url).host];
-        if (hostOverride !== undefined) {
-            const url = new URL(request.url);
-            url.host = hostOverride;
-            request = new Request(url, request)
+const emitStats = async (request: Request, response: Response, durationMs: number, stats: string) => {
+    try {
+        const apiKey = process.env.DD_API_KEY
+        if (!apiKey) {
+            return;
         }
 
-        const time = Date.now()
-        // We want to follow the redirects, as gradle can do a pretty
-        // bad job at following links
-        const response = await fetch(request, { redirect: 'follow' })
-        const duration = Date.now() - time
-
-        const stats = response.headers.get("X-CurseMaven-Stats");
-        const apiKey = await env.KV_DATADOG.get("DD_API_KEY");
-
-        if (apiKey !== null && stats !== null) {
-            ctx.waitUntil(this.logMetrics(request, response, stats, apiKey, duration))
-        }
-
-        return response
-    },
-
-    async logMetrics(request: Request, response: Response, stats: string, ddApiKey: string, durationMs: number) {
-        const statsParam = new URLSearchParams(`?${stats}`)
-
-        const cursemavenData: Record<string, string> = {};
-        [...statsParam.entries()]
-            .filter(([_, value]) => value !== "")
-            .forEach(([key, value]) => cursemavenData[key] = decodeURIComponent(value));
+        const cursemavenData: Record<string, string> = JSON.parse(stats);
 
         const url = new URL(request.url);
 
@@ -70,7 +45,7 @@ export default {
             timestamp: Date.now(),
         };
 
-        const hostname = url.host;
+        const hostname = hostRewrites[url.hostname] ?? url.hostname;
 
         const data = {
             ddsource: 'cloudflare',
@@ -80,14 +55,18 @@ export default {
         };
 
         const datadogEndpoint = 'https://http-intake.logs.datadoghq.com/v1/input/'
-
         await fetch(datadogEndpoint, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: new Headers({
                 'Content-Type': 'application/json',
-                'DD-API-KEY': ddApiKey,
+                'DD-API-KEY': apiKey,
             }),
         })
+    } catch (err) {
+        console.error("Caught error while emitting stats: ")
+        console.error(err)
     }
-};
+}
+
+export default emitStats;

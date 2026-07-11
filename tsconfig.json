@@ -8,6 +8,9 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "types": [
+      "@cloudflare/workers-types"
+    ],
     "paths": {
       "*": [
         "node_modules/*"
@@ -15,6 +18,7 @@
     }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "worker-configuration.d.ts"
   ]
 }

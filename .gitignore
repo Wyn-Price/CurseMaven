@@ -107,3 +107,7 @@ dist
 
 # JS build
 build.js
+
+
+.wrangler/
+.cloudflare/

@@ -1,7 +1,12 @@
+import express from "express";
 import { config } from "dotenv";
 import http from "http";
 import app from "./app";
 config()
+
+app.use(express.static("public", {
+  extensions: ["html"],
+}));
 
 const server = http.createServer(app);
 

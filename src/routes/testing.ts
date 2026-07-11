@@ -1,12 +1,12 @@
 import escapeHTML from 'escape-html';
 import { RequestHandler } from 'express';
 import createClassifierMap from './classifiermap';
-import { authFetch, getDownloadUrl, getFetchedData } from './util';
+import { authFetch, getDownloadUrl, getFirst, getRedirectUrl } from './util';
 
 
 const testing: RequestHandler = async (req, res) => {
   const { id, fileIds } = req.params
-  const descriptorSplit = id.split("-")
+  const descriptorSplit = getFirst(id).split("-")
 
   const name = descriptorSplit.slice(0, descriptorSplit.length - 1).join("-")
   const projId = descriptorSplit[descriptorSplit.length - 1]
@@ -24,7 +24,7 @@ const testing: RequestHandler = async (req, res) => {
 
 
   try {
-    await runTests(projId, fileIds, output)
+    await runTests(projId, getFirst(fileIds), output)
   } catch (e) {
     if (!(e instanceof ExitError)) {
       output.push("\n\n")
@@ -78,8 +78,16 @@ const fetchUrlTest = async (id: string, fileId: string, output: string[], prefix
       throw new ExitError()
     }
 
-    const fileUrl = await getFetchedData(fetched)
+    const fileUrl = await getRedirectUrl(fetched)
     output.push(`${prefix}Found: ${fileUrl}`)
+
+    const result = await authFetch(fileUrl)
+    output.push(`${prefix} - GET Response: ${result.status}`)
+
+    for (const header of ["Content-Type", "Content-Length", "Last-Modified"]) {
+      output.push(`${prefix}     ${header}: ${result.headers.get(header)}`)
+    }
+
   } catch (e) {
     output.push("\n\n")
     output.push("---------- ERROR ----------")

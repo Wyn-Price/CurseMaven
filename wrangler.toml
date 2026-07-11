@@ -1,0 +1,26 @@
+"$schema" = "./node_modules/wrangler/config-schema.json"
+main = "src/index-cloudflare.ts"
+compatibility_date = "2026-07-10"
+compatibility_flags = ["nodejs_compat"]
+
+workers_dev = true
+preview_urls = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[env.prod]
+name = "cursemaven-prod"
+
+
+[env.beta]
+name = "cursemaven-beta"
+
+[[env.beta.routes]]
+pattern = "beta.cursemaven.com/*"
+zone_name = "cursemaven.com"
+
+[[env.beta.routes]]
+pattern = "cfa2.cursemaven.com/*"
+zone_name = "cursemaven.com"
