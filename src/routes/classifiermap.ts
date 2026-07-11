@@ -13,7 +13,7 @@ const createClassifierMap = (fileIds: string) => {
   if (fileIds.length > 100) {
     return null
   }
-  let regexResult: RegExpExecArray
+  let regexResult: RegExpExecArray | null
 
   const mainFileIdRegex = /^\d+/
   const mainFileMatch = fileIds.match(mainFileIdRegex)

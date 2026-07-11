@@ -104,3 +104,14 @@ dist
 .tern-port
 .vercel
 .idea
+
+# JS build
+build.js
+
+
+.wrangler/
+.cloudflare/
+
+.yarn
+
+.corepack
