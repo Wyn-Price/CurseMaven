@@ -14,7 +14,6 @@ describe('Normal Download URL', () => {
     expect(res.status).toStrictEqual(302)
     expect(res.headers['location']).toStrictEqual("https://edge.forgecdn.net/files/2724/420/jei_1.12.2-4.15.0.281.jar")
   })
-
   test("Normal Jar that doesn't exist should return 404", async () => {
     //curse.maven:invalid-12345:12345
     const res = await requestWithSupertest.get(downloadUrl('invalid', '12345', '54321', '.jar'))
