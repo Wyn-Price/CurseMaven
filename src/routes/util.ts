@@ -1,5 +1,5 @@
 import express from "express";
-import { Readable } from "stream";
+import { once } from "node:events";
 
 export const authFetch = (url: string) => fetch(url, {
   redirect: 'follow',
@@ -15,10 +15,37 @@ export const getRedirectUrl = async (response: Response) => {
 }
 
 export const pipeResponse = async (from: Response, to: express.Response) => {
-  to.status(from.status)
-    .set(Object.fromEntries(from.headers));
+  to.status(from.status);
+  to.set(Object.fromEntries(from.headers));
 
-  Readable.fromWeb(from.body as any).pipe(to);
+  if (!from.body) {
+    to.end();
+    return;
+  }
+
+  // None of the built in node piping works.
+  // Just manually pipe ourselves
+  //
+  // I've tried:
+  //   - Readable.fromWeb(from.body).pipe(to)
+  //   - pipeline(Readable.fromWeb(from.body), to)
+  const reader = from.body.getReader();
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      if (!to.write(Buffer.from(value))) {
+        await once(to, "drain");
+      }
+    }
+
+    to.end();
+  } finally {
+    reader.releaseLock();
+  }
 }
 
 export const getFirst = (str: string | string[]) => {

@@ -20,7 +20,7 @@ app.get("/{*path}", async (req, res) => {
 const cloudflare: ExportedHandler = {
     async fetch(request, env, ctx) {
         const start = performance.now();
-        const response = await server.fetch(request, env, ctx);
+        const response = await server.fetch!(request, env, ctx);
         const duration = performance.now() - start;
 
         const stats = response.headers.get(STATS_HEADER);
