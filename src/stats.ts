@@ -13,6 +13,11 @@ const emitStats = async (request: Request, response: Response, durationMs: numbe
         }
 
         const cursemavenData: Record<string, string> = JSON.parse(stats);
+        for (const key in cursemavenData) {
+            if (cursemavenData[key] === "") {
+                delete cursemavenData[key];
+            }
+        }
 
         const url = new URL(request.url);
 
