@@ -1,5 +1,4 @@
 interface __BaseEnv_Env {
-    ASSETS: Fetcher;
     CF_API_KEY: string;
     DD_API_KEY: string;
 }
@@ -10,13 +9,11 @@ declare namespace Cloudflare {
     }
 
     interface ProdEnv {
-        ASSETS: Fetcher;
         CF_API_KEY: string;
         DD_API_KEY: string;
     }
 
     interface BetaEnv {
-        ASSETS: Fetcher;
         CF_API_KEY: string;
         DD_API_KEY: string;
     }

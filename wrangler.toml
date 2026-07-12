@@ -8,7 +8,6 @@ preview_urls = true
 
 [assets]
 directory = "./public"
-binding = "ASSETS"
 
 [env.prod]
 name = "cursemaven-prod"
