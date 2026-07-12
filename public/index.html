@@ -19,6 +19,7 @@
     <div class="main-container">
         <h1>Curse Maven</h1>
         <span>
+            <h1 class="cond-beta" data-cond-beta="true" style="color: red">Beta build - here be dragons!</h1>
             <span class="subtitle-padding-start">
                 Made by Wyn Price
             </span>
@@ -40,7 +41,14 @@
         <br>
         <p>Curse maven is an alternative to the normal curseforge maven, that takes in the project id and file id,
             rather than getting the artifacts from the jar name.</p>
-        <p>Like to live fast? <a href="https://beta.cursemaven.com">Try out the beta build of cursemaven</a></p>
+
+        <p class="cond-beta" data-cond-beta="true">
+            Like to be on the safe side? <a href="https://cursemaven.com">Try out the stable build of cursemaven</a>
+        </p>
+        <p class="cond-beta" data-cond-beta="false">
+            Like to live fast? <a href="https://beta.cursemaven.com">Try out the beta build of cursemaven</a>
+        </p>
+
         <h2>Adding the Maven</h2>
         <p>Add <span class="inline-host text-highlight">https://cursemaven.com/</span> as a maven repository, like
             normal.</p>
@@ -204,6 +212,12 @@
             host = "beta.cursemaven.com";
         }
         Array.from(document.getElementsByClassName("inline-host")).forEach(e => e.textContent = `https://${host}`)
+
+        // Guess if the hostname is beta, and toggle elements as so
+        const isBeta = host.includes("beta");
+        Array.from(document.querySelectorAll(`.cond-beta`))
+            .filter(e => e.getAttribute("data-cond-beta") === String(isBeta))
+            .forEach(e => e.classList.add("active"))
     </script>
 </body>
 
