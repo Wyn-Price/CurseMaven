@@ -1,68 +1,21 @@
 # CurseMaven
-[![powered-by-vercel](https://user-images.githubusercontent.com/15876682/167162686-115e80ad-d6f2-44f5-bd36-4d506531e17e.svg)](https://vercel.com/?utm_source=curse-maven&utm_campaign=oss)
-
 A more robust alternative to the normal curseforge maven, that takes in the project id and file id, rather than getting the artifacts from the jar name.
 
-See https://cursemaven.com/ for an up-to-date Readme.
+See https://cursemaven.com/ for an up-to-date instructions.
 
-# Adding the Maven
-Add `https://cursemaven.com/` as a maven repository, like normal.
-```gradle
-repositories {
-    maven {
-        url "https://cursemaven.com"
-    
-}
-```
-## Gradle 5+
-If you're using Gradle 5+, you can optimize the maven repository:
-```gradle
-repositories {
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-}
-```
-# Usage
-The dependency format is as follows: `curse.maven:<descriptor>-<projectid>:<fileid>`
- - `curse.maven` -> Required. Marks the dependency to be resolved by the curse maven website.
- - `<descriptor>` -> Can be anything you want. This file downloaded will have this in it's name, so it's good to use this to show which files are what. A good practice would be to have this as the project slug.
- - `<projectid>` -> The project id of the file you want to add as a dependency.
- - `<fileid>` -> The file id of the file you want to add as a dependency.
-
-## Getting the IDs
-### Project ID
-The Project ID can be found on the `About Project` section of the project
-<img height="300px" src="https://www.cursemaven.com/projectid.png">
-
-### File ID
-To get the file ID, go to the download page of file you want to use, and the file ID will be in the URL.
-<img height="300px" src="https://www.cursemaven.com/fileid.png">
-
-# Examples
- - [Forge Example](https://www.cursemaven.com/forge)
- - [Fabric Example](https://www.cursemaven.com/fabric)
- 
-```gradle
-dependencies {
-    api "curse.maven:jei-238222:2724420"
-}
-```
-Would point [here](https://www.curseforge.com/minecraft/mc-mods/ctm/files/2642375) with the scope `api`     
-
-```gradle
-dependencies {
-    implementation fg.deobf("curse.maven:ctm-267602:2642375")
-}
-```
-Would point [here](https://www.curseforge.com/minecraft/mc-mods/ctm/files/2642375) with the scope `implementation`, and be decompiled by ForgeGradle
-
-
-# Testing
-To test cursemaven, get the project id and file id (and optional classifier), and navigate to `https://www.cursemaven.com/test/<ProjectId>/<FileId>/<Classifier?>`
-
-# Old version
-https://github.com/Wyn-Price/CurseMaven-Old
+# History
+ - [Version 1 (Java app)](https://github.com/Wyn-Price/CurseForge-Maven-Helper)
+   - Scraped the file download page to get the filename, and worked out the required maven coordinates for the official CurseForge maven.
+ - [Version 2 (Gradle Plugin)](https://github.com/Wyn-Price/CurseMaven-OLD/tree/1.x.x)
+   - Can be called directly from build.gradle `compile curse.resolve("jei", "2724420")`, and would download the dependency into a local repo
+ - [Version 3 (Gradle Plugin)](https://github.com/Wyn-Price/CurseMaven-OLD/tree/2.x.x)
+   - Attached a dummy artefact repo that would download the required dep via `compile "curse.maven:jei:2724420"`
+ - [Version 4 (Nginx JS)](https://gist.github.com/Wyn-Price/c9e70557a8abc926e69712d06f948fae)
+   - Moved to a proper maven site that would call curseforge's API then return a redirect to the Download url
+   - (Thanks [@NeusFear](https://github.com/NeusFear)) for the server!)
+ - [Version 5 (Website - Express/Vercel)](https://github.com/Wyn-Price/CurseMaven/tree/old-vercel-deployment)
+   - Same as the above, but written in express and deployed on Vercel
+   - Cloudflare workers were used for collecting stats
+ - [Version 6 (Website - Express/Cloudflare worker)](https://github.com/Wyn-Price/CurseMaven/tree/main)
+   - Same as the above, but deployed on Cloudflare
+   - Downloads are now also piped through the cloudflare worker, rather than redirected
