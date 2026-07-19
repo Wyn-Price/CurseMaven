@@ -1,5 +1,5 @@
 "$schema" = "./node_modules/wrangler/config-schema.json"
-name = "cursemaven"
+name = "cursemaven-prod"
 main = "src/index-cloudflare.ts"
 compatibility_date = "2026-07-10"
 compatibility_flags = ["nodejs_compat"]
