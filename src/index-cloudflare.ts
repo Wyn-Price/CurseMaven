@@ -1,6 +1,6 @@
 import app from "./app";
 import { httpServerHandler } from "cloudflare:node";
-import { FOLLOW_REDIRECT_HEADER } from "./routes/util";
+import { authFetch, FOLLOW_REDIRECT_HEADER } from "./routes/util";
 import emitStats, { STATS_HEADER } from "./stats";
 
 const port = Number(process.env.PORT) || 3000;
@@ -23,7 +23,7 @@ const cloudflare: ExportedHandler = {
             // on, as gradle does a pretty bad job at following them
             const location = response.headers.get("Location");
             if (response.headers.has(FOLLOW_REDIRECT_HEADER) && location !== null) {
-                response = await fetch(location);
+                response = await authFetch(location);
             }
         } catch (err) {
             console.error("Caught: ", err);
